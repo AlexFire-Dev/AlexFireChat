@@ -1,0 +1,4 @@
+<div class="mb-3">
+    <label for="id_{{ name }}" class="form-label">{{ label }}:</label>
+    <textarea class="form-control" name="{{ name }}" required id="id_{{ name }}" rows="10"{% if readonly %} readonly{% endif %}>{% if value %}{{ value }}{% endif %}</textarea>
+</div>

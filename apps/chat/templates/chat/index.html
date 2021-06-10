@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block styles%}{% static 'chat/index.css' %}{% endblock %}
+
+{% block style %}
+    <style></style>
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        {% for member in membership %}
+            {% include 'chat/guild_link.html' with id=member.guild.id title=member.guild.name %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script></script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% load static %}
+
+
+<div style="margin-top: 2px">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px">
+        <span style="font-weight: bold">{% if message.author.user.get_full_name %}{{ message.author.user.get_full_name }}{% else %}{{ message.author.user.username }}{% endif %}</span>
+        <a href=""><img alt="and" src="{% static 'images/and.svg' %}" height="24px" width="24px"></a>
+    </div>
+    <hr style="margin: 0 0 16px;">
+    <p class="text">{{ message.text|linebreaksbr }}</p>
+    <hr style="margin: 0">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px">
+        <span class="text-muted" style="font-size: 15px">Создано: {{ message.created_at }}</span>
+        <span class="text-muted" style="font-size: 15px">Обновлено: {{ message.modified_at }}</span>
+    </div>
+    <hr style="margin: 0">
+</div>

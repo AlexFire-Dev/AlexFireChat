@@ -1,0 +1,8 @@
+<div{% if width %} style="width: {{ width }}"{% endif %}{% if classes %} class="{{ classes }}"{% endif %}>
+    <label for="id_{{ name }}" class="form-label">{{ label }}:</label>
+    <input {% if value %}value="{{ value }}" {% endif %}class="form-control" type="text" name="{{ name }}" maxlength="{% if maxlength %}{{ maxlength }}{% else %}150{% endif %}" {% if nonrequired %}{% else %}required{% endif %} id="id_{{ name }}" autocomplete="{% if autocomplete %}{{ autocomplete }}{% else %}off{% endif %}"{% if readonly %} readonly{% endif %}>
+    {% if help_text %}
+        <div id="id_{{ name }}" class="form-text">{{ help_text }}</div>{% endif %}
+    {% if errors %}
+        <div style="color: red" id="id_{{ name }}" class="form-text">{{ errors }}</div>{% endif %}
+</div>

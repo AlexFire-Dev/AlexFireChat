@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block style %}
+    <style>
+        .feed {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .message {
+            display: flex;
+            padding-top: 20px;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .message__button {
+            border: none;
+            background-color: white;
+            margin-left: 7px;
+            margin-bottom: 5px;
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow-y: scroll;
+            height: 400px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block main %}
+    <div class="container" style="flex-grow: 1">
+        <div class="feed">
+            <div id="feed" class="messages">
+                {% for message in messages %}{% include 'chat/guild_message.html' %}{% endfor %}
+            </div>
+            <div class="message">
+                <textarea style="overflow: hidden; resize: none" placeholder="Сообщение" class="form-control" id="TextMessageInput" rows="2"></textarea>
+                <button class="message__button" id="TextMessageButton"><img width="25px" height="25px" src="{% static 'images/send.svg' %}" alt="send"></button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script>
+    const guildId = {{ guild.id }};
+
+    const guildSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + guildId + '/'
+    )
+
+    guildSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    guildSocket.onopen = function (e) {
+        console.info('Chat socket connected');
+    };
+
+    guildSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const feed = document.querySelector(`#feed`);
+        let message = data.message.replace(/\n/g, '<br>')
+        console.log(data)
+        feed.innerHTML +=
+            `<div style="margin-top: 2px">` +
+                `<div style="display: flex; align-items: center; justify-content: space-between; padding: 5px">` +
+                    `<span style="font-weight: bold">${data.author}</span>` +
+                    `<a href=""><img alt="and" src="{% static 'images/and.svg' %}" height="24px" width="24px"></a>` +
+                `</div>` +
+                `<hr style="margin: 0 0 16px;">` +
+                `<p class="text">${message}</p>` +
+                `<hr style="margin: 0">` +
+                `<div style="display: flex; align-items: center; justify-content: space-between; padding: 5px">` +
+                    `<span class="text-muted" style="font-size: 15px">Создано: ${data.created_at}</span>` +
+                    `<span class="text-muted" style="font-size: 15px">Обновлено: ${data.modified_at}</span>` +
+                `</div>` +
+               `<hr style="margin: 0">` +
+            `</div>`;
+        feed.scrollTop = feed.scrollHeight
+    };
+
+    document.querySelector(`#TextMessageButton`).onclick = function (e) {
+        const TextMessageInput = document.querySelector(`#TextMessageInput`);
+        const message = TextMessageInput.value;
+
+        if (message !== '') {
+            guildSocket.send(JSON.stringify({'message': message}));
+        }
+
+        TextMessageInput.value = '';
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const feed = document.querySelector(`#feed`);
+        feed.scrollTop = feed.scrollHeight
+    });
+    </script>
+{% endblock %}

@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'user.User'
 
+LOGIN_URL = reverse_lazy('login')
+
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
@@ -171,6 +173,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
 
 CHANNEL_LAYERS = {
     'default': {

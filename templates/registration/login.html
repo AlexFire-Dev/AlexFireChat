@@ -1,7 +1,39 @@
 {% extends 'base.html' %}
 
+
+{% block style %}{% endblock %}
+
+
 {% block main %}
     <div class="container">
-        Login will be here!
+        <div class="main__login">
+            {% if form.errors %}
+                <span style="color: red; font-weight: bold">Пароль или имя пользователя введены неверно!</span>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <p style="margin-top: 15px" class="header__profile__bio">Вы уже вошли в свой аккаунт!</p>
+                <a style="text-decoration: none" href="{% url 'index' %}">Нажмите для возвращения на главную</a>
+            {% else %}
+                <form style="margin-top: 15px" method="post" action="{% url 'login' %}">
+                    <h2 style="margin-bottom: 20px">Вход</h2>
+                    {% csrf_token %}
+                    {% with '300px' as width %}
+                        {% with 'username' as autocomplete %}
+                            {% include 'forms/form_field_text.html' with label=form.username.label name=form.username.name help_text=form.username.help_text errors=form.username.errors  %}
+                        {% endwith %}
+                        <br>
+                        {% include 'forms/form_field_password.html' with label=form.password.label name=form.password.name help_text=form.password.help_text errors=form.password.errors  %}
+                        <br>
+                    {% endwith %}
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
+
+                {# Assumes you setup the password_reset view in your URLconf #}
+                <br>
+                <a style="font-weight: bold; text-decoration: none" href="{% url 'password_reset' %}">Забыли пароль?</a>
+            {% endif %}
+
+        </div>
     </div>
 {% endblock %}

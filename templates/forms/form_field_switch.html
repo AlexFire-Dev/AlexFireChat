@@ -1,0 +1,4 @@
+<div class="form-check form-switch">
+    <label class="form-check-label" for="id_{{ name }}">{{ label }}</label>
+    <input type="checkbox" {% if value %}checked {% endif %}name="{{ name }}" class="form-check-input" id="id_{{ name }}"{% if disabled %} disabled{% endif %}>
+</div>

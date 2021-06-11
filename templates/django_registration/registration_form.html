@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+    .create__form {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    </style>
+{% endblock %}
+
+
+{% block main %}
+    <form method="post" class="container create__form">
+        <h2 style="margin-bottom: 20px">Регистрация</h2>
+        {% csrf_token %}
+        {% with '300px' as width %}
+            {% include 'forms/form_field_text.html' with label=form.username.label name=form.username.name help_text=form.username.help_text errors=form.username.errors %}
+            <br>
+            {% include 'forms/form_field_email.html' with label=form.email.label name=form.email.name help_text=form.email.help_text errors=form.email.errors %}
+            <br>
+            {% include 'forms/form_field_password.html' with label=form.password1.label name=form.password1.name help_text=form.password1.help_text errors=form.password1.errors  %}
+            <br>
+            {% include 'forms/form_field_password.html' with label=form.password2.label name=form.password2.name help_text=form.password2.help_text errors=form.password2.errors  %}
+            <br>
+        {% endwith %}
+        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+    </form>
+{% endblock %}

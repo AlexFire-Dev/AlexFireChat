@@ -6,5 +6,6 @@ from .views import *
 
 urlpatterns = [
     path('', login_required(IndexView.as_view()), name='index'),
-    path('guild/<int:guild>/', login_required(GuildView.as_view()), name='guild-chat')
+    path('guild/<int:guild>/', login_required(GuildView.as_view()), name='guild-chat'),
+    path('guild/create/', login_required(GuildCreateView.as_view()), name='guild-create')
 ]

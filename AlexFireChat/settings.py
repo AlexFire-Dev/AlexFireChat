@@ -61,7 +61,6 @@ LOGOUT_REDIRECT_URL = reverse_lazy('login')
 ACCOUNT_ACTIVATION_DAYS = 2
 
 # Mail settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 AUTH_USER_EMAIL_UNIQUE = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
@@ -69,7 +68,10 @@ EMAIL_HOST_USER = os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = os.getenv('EMAIL_USER')
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -106,12 +108,24 @@ ASGI_APPLICATION = 'AlexFireChat.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER', default='postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST', default='localhost'),
+            'PORT': int(os.getenv('DB_PORT', default=5432)),
+        }
+    }
 
 
 # Password validation

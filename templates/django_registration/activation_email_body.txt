@@ -1,0 +1,5 @@
+Для активации учетной записи перейдите по ссылке ниже:
+
+{{ scheme }}://{{ site }}{% url 'django_registration_activate' activation_key %}
+
+Ссылка действительна в течение {{ expiration_days }} дня(ей).

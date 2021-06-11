@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+
+{% block main %}
+    <div class="container">
+        <h2 style="margin-top: 15px">Активация</h2>
+        <br>
+        <p>Поздравляем!</p>
+        <p>Ваша учетная запись активирована.</p>
+        <a href="{% url 'login' %}" style="font-weight: bold; text-decoration: none">Заходите на сайт.</a>
+    </div>
+{% endblock %}

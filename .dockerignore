@@ -1,0 +1,12 @@
+# Ignore everything
+**
+
+# Allowed
+!apps/
+!assets/
+!templates/
+!AlexFireChat/
+
+!manage.py
+!requirements.txt
+!start.sh

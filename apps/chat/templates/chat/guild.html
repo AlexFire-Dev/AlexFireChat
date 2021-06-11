@@ -60,7 +60,7 @@
 
     const guildSocket = new WebSocket(
         'ws://' + window.location.host + '/ws/chat/' + guildId + '/'
-    )
+    );
 
     guildSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');

@@ -13,6 +13,16 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        key = self.request.GET.get('join_input')
+
+        if key:
+            try:
+                link = InviteLink.objects.get(key=key)
+                guild = link.guild
+                Member.objects.get_or_create(user=self.request.user, guild=guild)
+            except:
+                pass
+
         membership = Member.objects.filter(user=self.request.user)
 
         context.update({
@@ -33,6 +43,7 @@ class GuildView(TemplateView):
 
         context.update({
             'guild': guild,
+            'member': member,
             'messages': messages,
         })
         return context

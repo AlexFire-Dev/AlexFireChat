@@ -11,8 +11,3 @@
 .guild-link:hover {
   color: black;
 }
-
-.guild-link__text {
-    font-weight: bold;
-    font-size: 30px;
-}

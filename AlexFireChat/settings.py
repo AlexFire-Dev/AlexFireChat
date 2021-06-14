@@ -192,18 +192,15 @@ REST_FRAMEWORK = {
 if DEBUG:
     CHANNEL_LAYERS = {
         'default': {
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                'hosts': [('127.0.0.1', 6379)],
-            },
-        },
+            'BACKEND': 'channels.layers.InMemoryChannelLayer'
+        }
     }
 else:
     CHANNEL_LAYERS = {
         'default': {
             'BACKEND': 'channels_redis.core.RedisChannelLayer',
             'CONFIG': {
-                'hosts': [(os.getenv('REDIS_HOST'), os.getenv('REDIS_PORT', 6379))],
+                'hosts': [(os.getenv('REDIS_HOST'), os.getenv('REDIS_PORT', 6379))]
             },
         },
     }

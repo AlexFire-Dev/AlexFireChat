@@ -16,3 +16,8 @@ class GuildAdmin(admin.ModelAdmin):
 @admin.register(Message)
 class GuildAdmin(admin.ModelAdmin):
     list_display = ('id', 'author')
+
+
+@admin.register(InviteLink)
+class GuildAdmin(admin.ModelAdmin):
+    list_display = ('id', 'guild', 'key')

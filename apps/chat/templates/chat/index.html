@@ -5,11 +5,29 @@
 {% block styles%}{% static 'chat/index.css' %}{% endblock %}
 
 {% block style %}
-    <style></style>
+    <style>
+    .join {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        min-height: 100px;
+        flex-wrap: wrap;
+    }
+
+    .join__text {
+        margin-right: 7px;
+    }
+    </style>
 {% endblock %}
 
 {% block main %}
     <div class="container">
+        <form method="get" class="join">
+            <h3 class="join__text">Присоединится к серверу</h3>
+            {% include 'forms/form_field_text.html' with placeholder='Код приглашения' name='join_input' maxlength=15 width='200px' %}
+            <button class="btn btn-primary" type="submit">Вступить</button>
+        </form>
+        <hr style="margin: 0">
         {% for member in membership %}
             {% include 'chat/guild_link.html' with id=member.guild.id title=member.guild.name %}
         {% endfor %}

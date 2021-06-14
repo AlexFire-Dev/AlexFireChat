@@ -38,7 +38,7 @@
                 <div class="header__controls">
                     {% if user.is_authenticated %}
                         <a class="header__controls__link" href="{% url 'index' %}">Главная</a>
-                        <a class="header__controls__link" href="{% url 'guild-create' %}">Создать сервер</a>
+                        {% block extra-header %}<a class="header__controls__link" href="{% url 'guild-create' %}">Создать сервер</a>{% endblock %}
                         <a class="header__controls__link" href="{% url 'logout' %}">Выйти</a>
                     {% else %}
                         <a class="header__controls__link" href="{% url 'index' %}">Главная</a>

@@ -5,6 +5,11 @@
 {% block title %}{{ guild.name }}{% endblock %}
 
 
+{% block extra-header %}
+    {% if member.is_admin %}<a class="header__controls__link" href="{% url 'guild-chat' guild.id %}">Настройки сервера</a>{% endif %}
+{% endblock %}
+
+
 {% block style %}
     <style>
         .feed {

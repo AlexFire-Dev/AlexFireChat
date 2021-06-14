@@ -205,6 +205,5 @@ else:
             'CONFIG': {
                 'hosts': [(os.getenv('REDIS_HOST'), os.getenv('REDIS_PORT', 6379))],
             },
-            'ROUTING': 'AlexFireChat.asgi.application.websocket'
         },
     }

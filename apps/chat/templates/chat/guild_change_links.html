@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block extra-header %}
+    {% if member.is_admin %}<a class="header__controls__link" href="{% url 'guild-chat' guild.id %}">{{ guild.name }}</a>{% endif %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container">
+        <h2 style="margin-bottom: 10px; margin-top: 20px">Настройки сервера</h2>
+
+        <div class="btn-group" style="margin-bottom: 5px">
+            <a href="{% url 'guild-change-main' guild.id %}" class="btn btn-primary">Основные</a>
+            <a href="{% url 'guild-change-members' guild.id %}" class="btn btn-primary">Участники</a>
+            <span class="btn btn-primary active">Приглашения</span>
+        </div>
+
+        <div>
+            {% for link in links %}
+                {% include 'chat/link_info.html' %}
+            {% empty %}
+                <p>Кодов приглашения ещё нет :(</p>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'generate-invite-link' guild.id %}" class="btn btn-success" style="margin-top: 10px; margin-bottom: 5px">Сгенерировать новый код</a>
+    </div>
+{% endblock %}

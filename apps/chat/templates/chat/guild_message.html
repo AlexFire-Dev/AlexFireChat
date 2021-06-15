@@ -1,15 +1,15 @@
 {% load static %}
 
 
-<div style="margin-top: 2px; border-bottom: solid black 1px">
-    <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px">
+<div class="card text-center" style="margin-top: 15px">
+    <div class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between">
         <span style="font-weight: bold">{% if message.author.user.get_full_name %}{{ message.author.user.get_full_name }}{% else %}{{ message.author.user.username }}{% endif %}</span>
-        <a href=""><img alt="and" src="{% static 'images/and.svg' %}" height="24px" width="24px"></a>
+        <a href=""><img alt="and" src="{% static 'images/and.svg' %}" height="21px" width="21px"></a>
     </div>
-    <hr style="margin: 0 0 16px;">
-    <p class="text">{{ message.text|linebreaksbr }}</p>
-    <hr style="margin: 0">
-    <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px">
+    <div class="card-body">
+        <p class="card-text" style="text-align: start">{{ message.text|linebreaksbr }}</p>
+    </div>
+    <div class="card-footer text-muted" style="display: flex; align-items: flex-start; justify-content: space-between">
         <span class="text-muted" style="display: flex; font-size: 15px">Создано: <div class="local-time">{{ message.created_at|date:'Y.m.d H:i' }}</div></span>
         <span class="text-muted" style="display: flex; font-size: 15px">Обновлено: <div class="local-time">{{ message.modified_at|date:'Y.m.d H:i' }}</div></span>
     </div>

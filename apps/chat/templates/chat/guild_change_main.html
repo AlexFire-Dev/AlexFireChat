@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block extra-header %}
+    {% if member.is_admin %}
+        <a class="header__controls__link" href="{% url 'guild-chat' guild.id %}">{{ guild.name }}</a>{% endif %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container">
+        <h2 style="margin-bottom: 10px; margin-top: 20px">Настройки сервера</h2>
+
+        <div class="btn-group">
+            <span class="btn btn-primary active">Основные</span>
+            <a href="{% url 'guild-change-members' guild.id %}" class="btn btn-primary">Участники</a>
+            <a href="{% url 'guild-change-links' guild.id %}" class="btn btn-primary">Приглашения</a>
+        </div>
+
+        <form method="post" style="margin-top: 20px; margin-bottom: 10px">
+            {% csrf_token %}
+
+            {% include 'forms/form_field_text.html' with label='Название' value=form.name.value name=form.name.name maxlength=30 width='300px' %}
+
+            <button class="btn btn-primary" type="submit" style="margin-top: 30px">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}

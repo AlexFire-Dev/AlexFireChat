@@ -23,6 +23,8 @@ class Member(models.Model):
     guild = models.ForeignKey(Guild, on_delete=models.CASCADE, related_name='members')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='membership')
     admin = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+    banned = models.BooleanField(default=False)
     joined = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -1,0 +1,14 @@
+<div class="card" style="margin-top: 10px; margin-bottom: 5px">
+    <div class="card-header">
+        {% if member.user.get_full_name %}{{ member.user.get_full_name }}{% else %}{{ member.user.username }}{% endif %}
+    </div>
+    <div class="card-body" style="height: 70px">
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 38px">
+            {% include 'forms/form_field_check.html' with disabled=True value=member.is_admin label='Администратор' name='admin_check' %}
+
+            <div style="display: flex">
+                <a href="{% url 'guild-member-unban' guild.id member.id %}" class="btn btn-success">Разбанить</a>
+            </div>
+        </div>
+    </div>
+</div>

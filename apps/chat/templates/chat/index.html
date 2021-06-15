@@ -22,9 +22,9 @@
 
 {% block main %}
     <div class="container">
-        <form method="get" class="join">
+        <form method="get" class="join" action="{% url 'guild-join' %}">
             <h3 class="join__text">Присоединится к серверу</h3>
-            {% include 'forms/form_field_text.html' with placeholder='Код приглашения' name='join_input' maxlength=15 width='200px' %}
+            {% include 'forms/form_field_text.html' with placeholder='Код приглашения' name='join-input' maxlength=15 width='200px' %}
             <button class="btn btn-primary" type="submit">Вступить</button>
         </form>
         <hr style="margin: 0">

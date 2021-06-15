@@ -2,7 +2,20 @@
     <div class="card-header">
         {% if member.user.get_full_name %}{{ member.user.get_full_name }}{% else %}{{ member.user.username }}{% endif %}
     </div>
-    <div class="card-body">
-        {% include 'forms/form_field_check.html' with disabled=True value=member.is_admin label='Администратор' name='admin_check' %}
+    <div class="card-body" style="height: 70px">
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 38px">
+            {% include 'forms/form_field_check.html' with disabled=True value=member.is_admin label='Администратор' name='admin_check' %}
+            {% if not member.is_admin %}
+                <div style="display: flex">
+                    <a href="{% url 'guild-member-kick' guild.id member.id %}" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>
+                    <a href="{% url 'guild-member-ban' guild.id member.id %}" class="btn btn-danger">Забанить</a>
+                </div>
+            {% elif user == guild.creator and member.user != user %}
+                <div style="display: flex">
+                    <a href="{% url 'guild-member-kick' guild.id member.id %}" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>
+                    <a href="{% url 'guild-member-ban' guild.id member.id %}" class="btn btn-danger">Забанить</a>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>

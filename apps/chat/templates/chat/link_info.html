@@ -1,5 +1,10 @@
+{% load static %}
+
 <div class="card" style="margin-top: 10px; margin-bottom: 5px">
     <div class="card-body">
-        {{ link.key }}
+        <div style="display: flex; justify-content: space-between">
+            <span>{{ link.key }}</span>
+            <a href="{% url 'delete-invite-link' guild.id link.id %}"><img src="{% static 'images/delete.svg' %}" alt="delete" height="21px" width="21px"></a>
+        </div>
     </div>
 </div>

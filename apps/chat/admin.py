@@ -10,7 +10,7 @@ class GuildAdmin(admin.ModelAdmin):
 
 @admin.register(Member)
 class GuildAdmin(admin.ModelAdmin):
-    list_display = ('id', 'guild', 'user', 'admin')
+    list_display = ('id', 'guild', 'user', 'admin', 'active', 'banned')
 
 
 @admin.register(Message)

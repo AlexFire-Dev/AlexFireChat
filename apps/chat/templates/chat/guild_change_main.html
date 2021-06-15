@@ -17,6 +17,7 @@
         <div class="btn-group">
             <span class="btn btn-primary active">Основные</span>
             <a href="{% url 'guild-change-members' guild.id %}" class="btn btn-primary">Участники</a>
+            <a href="{% url 'guild-change-bans' guild.id %}" class="btn btn-primary">Баны</a>
             <a href="{% url 'guild-change-links' guild.id %}" class="btn btn-primary">Приглашения</a>
         </div>
 

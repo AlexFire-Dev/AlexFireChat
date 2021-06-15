@@ -1,5 +1,7 @@
+import random
+import string
+
 from django.db import models
-import random, string
 
 from apps.user.models import User
 

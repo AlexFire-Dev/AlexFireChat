@@ -2,10 +2,10 @@
 
 
 <div class="card text-center" style="margin-top: 15px">
-    <div class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between">
+    <header class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center">
         <span style="font-weight: bold">{% if message.author.user.get_full_name %}{{ message.author.user.get_full_name }}{% else %}{{ message.author.user.username }}{% endif %}</span>
-        <a href=""><img alt="and" src="{% static 'images/and.svg' %}" height="21px" width="21px"></a>
-    </div>
+        {% if message.author == member or member.is_admin %}<a href="#"><img src="{% static 'images/delete.svg' %}" alt="delete" width="21px" height="21px"></a>{% endif %}
+    </header>
     <div class="card-body">
         <p class="card-text" style="text-align: start">{{ message.text|linebreaksbr }}</p>
     </div>

@@ -39,6 +39,8 @@ class GuildConsumer(AsyncWebsocketConsumer):
         else:
             author = self.scope['user'].username
 
+        author_id = self.scope['user'].id
+
         # Send message to room group
         await self.channel_layer.group_send(
             self.guild_room_name,
@@ -46,6 +48,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'message': message,
                 'author': author,
+                'author_id': author_id,
                 'created_at': created_at,
                 'modified_at': modified_at
             }
@@ -55,6 +58,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         author = event['author']
+        author_id = event['author_id']
         created_at = event['created_at']
         modified_at = event['modified_at']
 
@@ -62,6 +66,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message,
             'author': author,
+            'author_id': author_id,
             'created_at': created_at,
             'modified_at': modified_at
         }))

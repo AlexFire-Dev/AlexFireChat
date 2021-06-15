@@ -44,10 +44,6 @@
             max-width: 100%;
             height: 400px;
         }
-
-        .text {
-            max-width: 100%;
-        }
     </style>
 {% endblock %}
 
@@ -74,7 +70,7 @@
     );
 
     guildSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
+        console.warn('Chat socket closed unexpectedly');
     };
 
     guildSocket.onopen = function (e) {
@@ -89,13 +85,19 @@
         const created_at = moment(moment.utc(data.created_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
         const modified_at = moment(moment.utc(data.modified_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
 
+        let href = ''
+
+        if (data.author_id === {{ member.id }} || true === {{ member.admin|lower }})  {
+            href = `<a href="#"><img src="{% static 'images/delete.svg' %}" alt="delete" width="21px" height="21px"></a>`;
+        }
+
         console.log(data)
         feed.innerHTML +=
             `<div class="card text-center" style="margin-top: 15px">` +
-                `<div class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between">` +
+                `<header class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center">` +
                     `<span style="font-weight: bold">${data.author}</span>` +
-                    `<a href=""><img alt="and" src="{% static 'images/and.svg' %}" height="21px" width="21px"></a>` +
-                `</div>` +
+                    `${href}` +
+                `</header>` +
                 `<div class="card-body">` +
                     `<p class="card-text" style="text-align: start">${message}</p>` +
                 `</div>` +

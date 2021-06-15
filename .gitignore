@@ -5,4 +5,4 @@
 /media/
 /static/
 
-deploy/conf.env
+/deploy/conf.env

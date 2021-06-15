@@ -20,4 +20,7 @@ urlpatterns = [
          ),
          name='register'
          ),
+
+    path('<int:userid>/', login_required(AccountView), name='profile'),
+    path('change/', login_required(ProfileChangeView.as_view()), name='profile-change'),
 ]

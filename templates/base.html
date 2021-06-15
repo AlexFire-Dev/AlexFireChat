@@ -21,7 +21,7 @@
     <body>
         <header class="header">
             <div class="{% block header_container_class %}container-xl{% endblock %}">
-                <a {% if user.is_authenticated %}href="" {% endif %}class="header__profile">
+                <a {% if user.is_authenticated %}href="{% url 'profile' user.id %}" {% endif %}class="header__profile">
                     <img
                         class="header__profile__img"
                         src="{% static 'images/user.svg' %}"

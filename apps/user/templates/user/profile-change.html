@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+    <form class="container" method="post">
+        {% csrf_token %}
+
+        <h2 style="margin-top: 25px">Редактировать профиль</h2>
+        <br>
+        {% include 'forms/form_field_text.html' with label=form.username.label name=form.username.name value=form.username.value errors=form.username.errors %}
+        <br>
+        <div class="row">
+            {% with 'col-sm-6' as classes %}
+                {% include 'forms/form_field_text.html' with label=form.first_name.label name=form.first_name.name value=form.first_name.value nonrequired=True %}
+                {% include 'forms/form_field_text.html' with label=form.last_name.label name=form.last_name.name value=form.last_name.value nonrequired=True %}
+            {% endwith %}
+        </div>
+        <br>
+        <div class="main__form" style="margin-top: 30px">
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Сохранить</button>
+            <a href="{% url 'profile' user.id %}" class="btn btn-secondary">Назад</a>
+            <br>
+        </div>
+    </form>
+{% endblock %}

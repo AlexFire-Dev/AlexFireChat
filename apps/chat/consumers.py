@@ -3,6 +3,7 @@ import json
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.shortcuts import get_object_or_404
+from rest_framework.authtoken.models import Token
 
 from .models import *
 
@@ -13,6 +14,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
         self.guild_id = self.scope['url_route']['kwargs']['guild_id']
         self.guild_room_name = f'guild_{self.guild_id}'
 
+        await self.get_user()
         if self.scope['user'].is_anonymous:
             return
 
@@ -116,3 +118,10 @@ class GuildConsumer(AsyncWebsocketConsumer):
             message.delete()
             return True
         return False
+
+    @database_sync_to_async
+    def get_user(self):
+        token = dict(self.scope['headers']).get(b'authorization')
+        if token:
+            token = token[6:].decode('UTF-8')
+            self.scope['user'] = get_object_or_404(Token, key=token).user

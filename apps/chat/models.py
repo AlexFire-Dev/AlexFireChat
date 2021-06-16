@@ -36,7 +36,7 @@ class Member(models.Model):
         if self.admin:
             return True
         else:
-            return
+            return False
 
 
 class Message(models.Model):

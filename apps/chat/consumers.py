@@ -30,45 +30,69 @@ class GuildConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
-        message = text_data_json.get('message')
+        action = text_data_json.get('action')
 
-        created_at, modified_at = await self.create_message(message=message)
+        if action == 'send':
+            message = text_data_json.get('message')
+            message = await self.create_message(message=message)
 
-        if self.scope['user'].get_full_name():
-            author = self.scope['user'].get_full_name()
-        else:
-            author = self.scope['user'].username
+            author = self.scope['user']
 
-        author_id = self.scope['user'].id
+            # Send message to room group
+            await self.channel_layer.group_send(
+                self.guild_room_name,
+                {
+                    'type': 'chat_message_send',
+                    'author': author,
+                    'message': message,
+                }
+            )
 
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.guild_room_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'author': author,
-                'author_id': author_id,
-                'created_at': created_at,
-                'modified_at': modified_at
-            }
-        )
+        elif action == 'delete':
+            message_id = text_data_json.get('message_id')
+
+            await self.delete_message(message_id=message_id)
+
+            await self.channel_layer.group_send(
+                self.guild_room_name,
+                {
+                    'type': 'chat_message_delete',
+                    'message_id': message_id,
+                }
+            )
 
     # Receive message from room group
-    async def chat_message(self, event):
-        message = event['message']
+    async def chat_message_send(self, event):
         author = event['author']
-        author_id = event['author_id']
-        created_at = event['created_at']
-        modified_at = event['modified_at']
+        message = event['message']
+
+        nickname = author.username
+        if author.get_full_name():
+            nickname = author.get_full_name()
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'message': message,
-            'author': author,
-            'author_id': author_id,
-            'created_at': created_at,
-            'modified_at': modified_at
+            'action': 'send',
+            'author': {
+                'id': author.id,
+                'nickname': nickname,
+            },
+            'message': {
+                'id': message.id,
+                'text': message.text,
+                'created_at': message.created_at.strftime('%Y.%m.%d %H:%M'),
+                'modified_at': message.modified_at.strftime('%Y.%m.%d %H:%M'),
+            },
+        }))
+
+    async def chat_message_delete(self, event):
+        message_id = event['message_id']
+
+        await self.send(text_data=json.dumps({
+            'action': 'delete',
+            'message': {
+                'id': message_id,
+            },
         }))
 
     @database_sync_to_async
@@ -78,4 +102,8 @@ class GuildConsumer(AsyncWebsocketConsumer):
 
         newMessage = Message.objects.create(author=author, text=message, guild=guild)
 
-        return newMessage.created_at.strftime('%Y.%m.%d %H:%M'), newMessage.modified_at.strftime('%Y.%m.%d %H:%M')
+        return newMessage
+
+    @database_sync_to_async
+    def delete_message(self, message_id):
+        get_object_or_404(Message, id=message_id).delete()

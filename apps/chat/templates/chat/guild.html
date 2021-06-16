@@ -35,6 +35,13 @@
             margin-bottom: 5px;
         }
 
+        .deleteButton {
+            border: none;
+            padding: 0;
+            margin: 0;
+            background-color: transparent;
+        }
+
         .messages {
             display: flex;
             flex-direction: column;
@@ -79,34 +86,41 @@
 
     guildSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
-        const feed = document.querySelector(`#feed`);
-        let message = data.message.replace(/\n/g, '<br>');
-
-        const created_at = moment(moment.utc(data.created_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
-        const modified_at = moment(moment.utc(data.modified_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
-
-        let href = ''
-
-        if (data.author_id === {{ member.id }} || true === {{ member.admin|lower }})  {
-            href = `<a href="#"><img src="{% static 'images/delete.svg' %}" alt="delete" width="21px" height="21px"></a>`;
-        }
-
         console.log(data)
-        feed.innerHTML +=
-            `<div class="card text-center" style="margin-top: 15px">` +
-                `<header class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center">` +
-                    `<span style="font-weight: bold">${data.author}</span>` +
-                    `${href}` +
-                `</header>` +
-                `<div class="card-body">` +
-                    `<p class="card-text" style="text-align: start">${message}</p>` +
-                `</div>` +
-                `<div class="card-footer text-muted" style="display: flex; align-items: flex-start; justify-content: space-between">` +
-                    `<span class="text-muted" style="display: flex; font-size: 15px">Создано: <div class="local-time">${created_at}</div></span>` +
-                    `<span class="text-muted" style="display: flex; font-size: 15px">Обновлено: <div class="local-time">${modified_at}</div></span>` +
-                `</div>` +
-            `</div>`;
-        feed.scrollTop = feed.scrollHeight
+
+
+        if (data.action === 'send') {
+            const feed = document.querySelector(`#feed`);
+
+            let text = data.message.text.replace(/\n/g, '<br>');
+
+            const created_at = moment(moment.utc(data.message.created_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
+            const modified_at = moment(moment.utc(data.message.modified_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
+
+            let href = ''
+
+            if (data.author.id === {{ member.id }} || true === {{ member.admin|lower }})  {
+                href = `<button class="deleteButton" onclick="deleteMessage(${ data.message.id })" type="button" href="#"><img src="{% static 'images/delete.svg' %}" alt="delete" width="21px" height="21px"></button>`;
+            }
+
+            feed.innerHTML +=
+                `<div id="id_${data.message.id}" class="card text-center" style="margin-top: 15px">` +
+                    `<header class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center">` +
+                        `<span style="font-weight: bold">${data.author.nickname}</span>` +
+                        `${href}` +
+                    `</header>` +
+                    `<div class="card-body">` +
+                        `<p class="card-text" style="text-align: start">${text}</p>` +
+                    `</div>` +
+                    `<footer class="card-footer text-muted" style="display: flex; align-items: flex-start; justify-content: space-between">` +
+                        `<span class="text-muted" style="display: flex; font-size: 15px">Создано: <div class="local-time">${created_at}</div></span>` +
+                        `<span class="text-muted" style="display: flex; font-size: 15px">Обновлено: <div class="local-time">${modified_at}</div></span>` +
+                    `</footer>` +
+                `</div>`;
+            feed.scrollTop = feed.scrollHeight
+        } else if (data.action === 'delete') {
+            document.getElementById(`id_${data.message.id}`).remove();
+        }
     };
 
     document.querySelector(`#TextMessageButton`).onclick = function (e) {
@@ -114,11 +128,21 @@
         const message = TextMessageInput.value;
 
         if (message !== '') {
-            guildSocket.send(JSON.stringify({'message': message}));
+            guildSocket.send(JSON.stringify({
+                'action': 'send',
+                'message': message
+            }));
         }
 
         TextMessageInput.value = '';
     };
+
+    function deleteMessage(message_id) {
+        guildSocket.send(JSON.stringify({
+            'action': 'delete',
+            'message_id': message_id,
+        }));
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
         const feed = document.querySelector(`#feed`);

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ bot.account.username }}-Developer{% endblock %}
+
+
+{% block extra-header %}
+    <a class="header__controls__link" href="{% url 'developer-index' %}">Мои боты</a>
+{% endblock %}
+
+
+{% block style %}
+    <style>
+        .workplace {
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block main %}
+    <div class="container workplace">
+        <h2 style="margin-bottom: 20px">Редактировать бота</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% include 'forms/form_field_text.html' with label='Название' value=form.username.value name=form.username.name help_text=form.username.help_text errors=form.username.errors width='300px' %}
+            <button class="btn btn-primary" type="submit" style="margin-top: 30px">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}

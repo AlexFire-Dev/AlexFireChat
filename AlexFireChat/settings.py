@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'channels',
     'django_registration',
 
+    'apps.api',
     'apps.user',
     'apps.chat',
     'apps.developer',

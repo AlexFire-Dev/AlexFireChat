@@ -9,6 +9,9 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='images/user/avatars', null=True, blank=True)
     bot = models.BooleanField(default=False)
 
+    def __str__(self):
+        return str(self.id)
+
     def GenerateBotToken(self):
         if self.bot:
             Token.objects.get_or_create(user_id=self.id)

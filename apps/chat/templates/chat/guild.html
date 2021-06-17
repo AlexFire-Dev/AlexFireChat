@@ -123,6 +123,13 @@
         }
     };
 
+    document.querySelector(`#TextMessageInput`).focus();
+    document.querySelector(`#TextMessageInput`).onkeyup = function (e) {
+        if (e.keyCode === 13 && e.ctrlKey) {
+            document.querySelector(`#TextMessageButton`).click();
+        }
+    };
+
     document.querySelector(`#TextMessageButton`).onclick = function (e) {
         const TextMessageInput = document.querySelector(`#TextMessageInput`);
         const message = TextMessageInput.value;

@@ -40,7 +40,6 @@ class GuildConsumer(AsyncWebsocketConsumer):
             message = text_data_json.get('message')
             message, member = await self.create_message(message=message)
 
-            author = self.scope['user'].id
             nickname = self.scope['user'].username
             if self.scope['user'].get_full_name():
                 nickname = self.scope['user'].get_full_name()
@@ -51,8 +50,10 @@ class GuildConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'chat_message_send',
                     'guild_id': guild_id,
-                    'author_id': author,
-                    'author_nick': nickname,
+                    'author': {
+                        'id': member.id,
+                        'nickname': nickname
+                    },
                     'message': {
                         'id': message.id,
                         'text': message.text,
@@ -78,8 +79,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
 
     # Receive message from room group
     async def chat_message_send(self, event):
-        author_id = event['author_id']
-        nickname = event['author_nick']
+        author = event['author']
         message = event['message']
         guild_id = event['guild_id']
 
@@ -87,8 +87,8 @@ class GuildConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'action': 'send',
             'author': {
-                'id': author_id,
-                'nickname': nickname,
+                'id': author['id'],
+                'nickname': author['nickname'],
             },
             'message': {
                 'id': message['id'],

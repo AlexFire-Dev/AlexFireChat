@@ -4,7 +4,10 @@
     <div class="card-body">
         <div style="display: flex; justify-content: space-between">
             <span>{{ link.key }}</span>
-            <a href="{% url 'delete-invite-link' guild.id link.id %}"><img src="{% static 'images/delete.svg' %}" alt="delete" height="21px" width="21px"></a>
+            <div>
+                <a class="key_link" href="{% url 'guild-join' %}?join-input={{ link.key }}">Ссылка</a>
+                <a href="{% url 'delete-invite-link' guild.id link.id %}"><img src="{% static 'images/delete.svg' %}" alt="delete" height="21px" width="21px"></a>
+            </div>
         </div>
     </div>
 </div>

@@ -77,7 +77,7 @@
     );
 
     guildSocket.onclose = function (e) {
-        console.warn('Chat socket closed unexpectedly');
+        document.location.href='{% url 'index' %}';
     };
 
     guildSocket.onopen = function (e) {

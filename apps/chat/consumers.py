@@ -185,7 +185,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
         }))
 
         if member == self.scope['member'].id:
-            await self.disconnect('403')
+            await self.close()
 
     async def chat_member_banned(self, event):
         member = event['member']['id']
@@ -201,7 +201,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
         }))
 
         if member == self.scope['member'].id:
-            await self.disconnect('403')
+            await self.close()
 
     @database_sync_to_async
     def get_member(self, member_id):

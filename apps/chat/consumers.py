@@ -13,7 +13,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
         self.guild_id = self.scope['url_route']['kwargs']['guild_id']
         self.guild_room_name = f'guild_{self.guild_id}'
 
-        await self.get_user()
+        await self.setup()
         if self.scope['user'].is_anonymous:
             return
 
@@ -87,9 +87,53 @@ class GuildConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
-        elif action == 'kicked' or action == 'banned':
-            if text_data_json.get('member_id') == self.scope['member'].id:
-                await self.disconnect(403)
+        elif action == 'kick':
+            member, user = await self.get_member(text_data_json.get('member_id'))
+
+            if not self.scope['member'].is_admin():
+                return
+            elif await self.guild_creator() == user:
+                return
+            elif member.is_admin():
+                creator = await self.guild_creator()
+                if self.scope['user'] != creator:
+                    return
+
+            result = await self.kick_member(member)
+            if result:
+                await self.channel_layer.group_send(
+                    self.guild_room_name,
+                    {
+                        'type': 'chat_member_kicked',
+                        'member': {
+                            'id': member.id,
+                        }
+                    }
+                )
+
+        elif action == 'ban':
+            member, user = await self.get_member(text_data_json.get('member_id'))
+
+            if not self.scope['member'].is_admin():
+                return
+            elif await self.guild_creator() == user:
+                return
+            elif member.is_admin():
+                creator = await self.guild_creator()
+                if self.scope['user'] != creator:
+                    return
+
+            result = await self.ban_member(member)
+            if result:
+                await self.channel_layer.group_send(
+                    self.guild_room_name,
+                    {
+                        'type': 'chat_member_banned',
+                        'member': {
+                            'id': member.id,
+                        }
+                    }
+                )
 
     # Receive message from room group
     async def chat_message_send(self, event):
@@ -126,6 +170,67 @@ class GuildConsumer(AsyncWebsocketConsumer):
                 'id': self.guild_id,
             },
         }))
+
+    async def chat_member_kicked(self, event):
+        member = event['member']['id']
+
+        await self.send(text_data=json.dumps({
+            'action': 'kicked',
+            'member': {
+                'id': member,
+            },
+            'guild': {
+                'id': self.guild_id,
+            },
+        }))
+
+        if member == self.scope['member'].id:
+            await self.disconnect('403')
+
+    async def chat_member_banned(self, event):
+        member = event['member']['id']
+
+        await self.send(text_data=json.dumps({
+            'action': 'banned',
+            'member': {
+                'id': member,
+            },
+            'guild': {
+                'id': self.guild_id,
+            },
+        }))
+
+        if member == self.scope['member'].id:
+            await self.disconnect('403')
+
+    @database_sync_to_async
+    def get_member(self, member_id):
+        try:
+            member = Member.objects.get(guild=self.scope['guild'], id=member_id)
+            return member, member.user
+        except:
+            return None
+
+    @database_sync_to_async
+    def kick_member(self, member: Member):
+        try:
+            member.admin = False
+            member.active = False
+            member.save()
+            return True
+        except:
+            return False
+
+    @database_sync_to_async
+    def ban_member(self, member: Member):
+        try:
+            member.admin = False
+            member.active = False
+            member.banned = True
+            member.save()
+            return True
+        except:
+            return False
 
     @database_sync_to_async
     def create_message(self, message):
@@ -165,7 +270,14 @@ class GuildConsumer(AsyncWebsocketConsumer):
         return ids
 
     @database_sync_to_async
-    def get_user(self):
+    def guild_creator(self):
+        try:
+            return self.scope['guild'].user
+        except:
+            return None
+
+    @database_sync_to_async
+    def setup(self):
         token = dict(self.scope['headers']).get(b'authorization')
         if token:
             token = token[6:].decode('UTF-8')
@@ -179,3 +291,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
                 self.scope['member'] = Member.objects.get(user=self.scope['user'], guild_id=self.guild_id)
             except:
                 return
+        try:
+            self.scope['guild'] = Guild.objects.get(id=self.guild_id)
+        except:
+            return

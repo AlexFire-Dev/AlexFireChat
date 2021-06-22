@@ -13,8 +13,6 @@ urlpatterns = [
     path('guild/<int:guild>/change/main/', login_required(GuildChangeMainView.as_view()), name='guild-change-main'),
 
     path('guild/<int:guild>/change/members/', login_required(GuildChangeMembersView.as_view()), name='guild-change-members'),
-    path('guild/<int:guild>/change/members/<int:member>/kick/', login_required(GuildMemberKick.as_view()), name='guild-member-kick'),
-    path('guild/<int:guild>/change/members/<int:member>/ban/', login_required(GuildMemberBan.as_view()), name='guild-member-ban'),
 
     path('guild/<int:guild>/change/bans/', login_required(GuildChangeBansView.as_view()), name='guild-change-bans'),
     path('guild/<int:guild>/change/bans/<int:member>/unban/', login_required(GuildMemberUnban.as_view()), name='guild-member-unban'),

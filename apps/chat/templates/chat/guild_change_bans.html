@@ -29,27 +29,3 @@
         </div>
     </div>
 {% endblock %}
-
-
-{% block script %}
-    <script>
-    const guildId = {{ guild.id }};
-
-    const guildSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + guildId + '/'
-    );
-
-    guildSocket.onclose = function (e) {
-        console.warn('Chat socket closed unexpectedly');
-    };
-
-    guildSocket.onopen = function (e) {
-        console.info('Chat socket connected');
-    };
-
-    guildSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        console.log(data);
-    };
-    </script>
-{% endblock %}

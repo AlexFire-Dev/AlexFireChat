@@ -218,65 +218,6 @@ class DeleteInvitationLink(RedirectView):
         return super(DeleteInvitationLink, self).get(self, request, *args, **kwargs)
 
 
-class GuildMemberKick(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('guild-change-members', args=[self.kwargs.get('guild')])
-
-    def dispatch(self, request, *args, **kwargs):
-        guild = get_object_or_404(Guild, id=kwargs.get('guild'))
-        me = get_object_or_404(Member, guild=guild, user=self.request.user, active=True, banned=False)
-        member = get_object_or_404(Member, guild=guild, id=kwargs.get('member'), active=True, banned=False)
-        if not me.is_admin():
-            return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
-        elif guild.creator == member.user:
-            return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
-        elif not member.is_admin():
-            if self.request.user != guild.creator:
-                return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
-            else:
-                return super(GuildMemberKick, self).dispatch(request, *args, **kwargs)
-        else:
-            return super(GuildMemberKick, self).dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        guild = get_object_or_404(Guild, id=kwargs.get('guild'))
-        member = get_object_or_404(Member, guild=guild, id=kwargs.get('member'), banned=False)
-        member.active = False
-        member.admin = False
-        member.save()
-        return super(GuildMemberKick, self).get(self, request, *args, **kwargs)
-
-
-class GuildMemberBan(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('guild-change-members', args=[self.kwargs.get('guild')])
-
-    def dispatch(self, request, *args, **kwargs):
-        guild = get_object_or_404(Guild, id=kwargs.get('guild'))
-        me = get_object_or_404(Member, guild=guild, user=self.request.user, active=True, banned=False)
-        member = get_object_or_404(Member, guild=guild, id=kwargs.get('member'), active=True, banned=False)
-        if not me.is_admin():
-            return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
-        elif guild.creator == member.user:
-            return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
-        elif not member.is_admin():
-            if self.request.user != guild.creator:
-                return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
-            else:
-                return super(GuildMemberBan, self).dispatch(request, *args, **kwargs)
-        else:
-            return super(GuildMemberBan, self).dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        guild = get_object_or_404(Guild, id=kwargs.get('guild'))
-        member = get_object_or_404(Member, guild=guild, id=kwargs.get('member'), banned=False)
-        member.banned = True
-        member.active = False
-        member.admin = False
-        member.save()
-        return super(GuildMemberBan, self).get(self, request, *args, **kwargs)
-
-
 class GuildMemberUnban(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse('guild-change-bans', args=[self.kwargs.get('guild')])

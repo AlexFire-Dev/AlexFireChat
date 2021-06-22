@@ -2,7 +2,6 @@ import json
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.models import Token
 
 from .models import *
@@ -33,6 +32,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
+
         action = text_data_json.get('action')
 
         if action == 'send':
@@ -49,7 +49,6 @@ class GuildConsumer(AsyncWebsocketConsumer):
                     self.guild_room_name,
                     {
                         'type': 'chat_message_send',
-                        'guild_id': self.guild_id,
                         'author': {
                             'id': member.id,
                             'nickname': nickname
@@ -72,16 +71,30 @@ class GuildConsumer(AsyncWebsocketConsumer):
                     self.guild_room_name,
                     {
                         'type': 'chat_message_delete',
-                        'guild_id': self.guild_id,
                         'message_id': message_id,
                     }
                 )
+
+        elif action == 'clear':
+            limit = int(text_data_json.get('limit'))
+            ids = await self.delete_messages(limit)
+            for one_id in ids:
+                await self.channel_layer.group_send(
+                    self.guild_room_name,
+                    {
+                        'type': 'chat_message_delete',
+                        'message_id': one_id,
+                    }
+                )
+
+        elif action == 'kicked' or action == 'banned':
+            if text_data_json.get('member_id') == self.scope['member'].id:
+                await self.disconnect(403)
 
     # Receive message from room group
     async def chat_message_send(self, event):
         author = event['author']
         message = event['message']
-        guild_id = event['guild_id']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
@@ -97,13 +110,12 @@ class GuildConsumer(AsyncWebsocketConsumer):
                 'modified_at': message['modified_at'],
             },
             'guild': {
-                'id': guild_id,
+                'id': self.guild_id,
             },
         }))
 
     async def chat_message_delete(self, event):
         message_id = event['message_id']
-        guild_id = event['guild_id']
 
         await self.send(text_data=json.dumps({
             'action': 'delete',
@@ -111,7 +123,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
                 'id': message_id,
             },
             'guild': {
-                'id': guild_id,
+                'id': self.guild_id,
             },
         }))
 
@@ -119,7 +131,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
     def create_message(self, message):
         try:
             guild = Guild.objects.get(id=self.guild_id)
-            author = Member.objects.get(user=self.scope['user'], guild=guild)
+            author = self.scope['member']
 
             newMessage = Message.objects.create(author=author, text=message, guild=guild)
             return newMessage, author, True
@@ -130,7 +142,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
     def delete_message(self, message_id):
         try:
             message = Message.objects.get(id=message_id)
-            member = Member.objects.get(user=self.scope['user'], guild_id=self.guild_id)
+            member = self.scope['member']
         except:
             return False
 
@@ -138,6 +150,19 @@ class GuildConsumer(AsyncWebsocketConsumer):
             message.delete()
             return True
         return False
+
+    @database_sync_to_async
+    def delete_messages(self, limit: int):
+        ids = []
+        messages = Message.objects.filter(guild_id=self.guild_id).order_by('-id')
+        for counter in range(limit):
+            try:
+                message = messages.latest('id')
+                ids.append(message.id)
+                message.delete()
+            except:
+                break
+        return ids
 
     @database_sync_to_async
     def get_user(self):
@@ -149,3 +174,8 @@ class GuildConsumer(AsyncWebsocketConsumer):
             except:
                 return
             self.scope['user'] = user
+        if self.scope.get('user'):
+            try:
+                self.scope['member'] = Member.objects.get(user=self.scope['user'], guild_id=self.guild_id)
+            except:
+                return

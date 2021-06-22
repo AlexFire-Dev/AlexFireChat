@@ -86,7 +86,7 @@
 
     guildSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
-        console.log(data)
+        console.log(data);
 
 
         if (data.action === 'send') {

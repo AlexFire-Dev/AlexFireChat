@@ -1,7 +1,9 @@
 _**AlexFireChat**_
 ------------
 
-________
+Status of Last Deployment:<br>
+<img src="https://github.com/AlexFire-Dev/AlexFireChat/workflows/CI/badge.svg?branch=main"><br>
+
 
 ### **_conf.env_**
 `location - deploy/conf.env`

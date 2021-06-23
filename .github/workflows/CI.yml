@@ -19,7 +19,6 @@ jobs:
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          timeout: 300
           script: |
             cd ${{ secrets.DIRECTORY }}
             git pull

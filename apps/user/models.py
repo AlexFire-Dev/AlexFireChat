@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from rest_framework.authtoken.models import Token
@@ -8,6 +9,18 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True, null=True, blank=True)
     avatar = models.ImageField(upload_to='images/user/avatars', null=True, blank=True)
     bot = models.BooleanField(default=False)
+
+    username_validator = UnicodeUsernameValidator()
+    username = models.CharField(
+        _('username'),
+        max_length=30,
+        unique=True,
+        help_text=_('Обязательное поле. Не более 30 символов. Только буквы, цифры и символы @/./+/-/_.'),
+        validators=[username_validator],
+        error_messages={
+            'unique': _("A user with that username already exists."),
+        },
+    )
 
     def __str__(self):
         return str(self.id)

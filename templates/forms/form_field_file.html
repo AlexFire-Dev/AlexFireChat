@@ -1,0 +1,4 @@
+<div class="mb-3"{% if width %} style="width: {{ width }}"{% endif %}>
+    <label for="id_{{ name }}" class="form-label">{{ label }}:</label>
+    <input name="{{ name }}" accept="{% if accept %}{{ accept }}{% else %}image/*{% endif %}" class="form-control" type="file" id="id_{{ name }}">
+</div>

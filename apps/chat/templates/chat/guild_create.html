@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
 {% block main %}
-    <form method="post" class="container" style="margin-top: 20px; margin-bottom: 10px">
+    <form method="post" enctype="multipart/form-data" class="container" style="margin-top: 20px; margin-bottom: 10px">
         {% csrf_token %}
-        <h2 style="margin-bottom: 10px">Создание сервера</h2>
+        <h2 style="margin-bottom: 20px">Создание сервера</h2>
 
         {% include 'forms/form_field_text.html' with label='Название' name=form.name.name maxlength=30 width='300px' %}
+        <br>
+        {% include 'forms/form_field_file.html' with label='Постер' name=form.poster.name width='300px' %}
 
         <button class="btn btn-primary" type="submit" style="margin-top: 30px">Создать</button>
     </form>

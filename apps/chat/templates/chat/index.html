@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container body__scroll">
+    <div class="container">
         <form method="get" class="join" action="{% url 'guild-join' %}">
             <h3 class="join__text">Присоединится к серверу</h3>
             {% include 'forms/form_field_text.html' with placeholder='Код приглашения' name='join-input' maxlength=15 width='200px' %}

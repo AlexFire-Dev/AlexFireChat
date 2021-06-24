@@ -1,3 +1,5 @@
+import channels.layers
+from asgiref.sync import async_to_sync
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -104,5 +106,17 @@ class BotJoinView(RedirectView):
         member.active = True
         member.admin = True
         member.save()
+
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'guild_{guild.id}',
+            {
+                'type': 'chat_member_joined',
+                'member': {
+                    'id': member.id,
+                }
+            }
+        )
+
         return super(BotJoinView, self).get(self, request, *args, **kwargs)
 

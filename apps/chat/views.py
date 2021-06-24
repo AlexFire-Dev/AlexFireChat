@@ -74,6 +74,18 @@ class GuildJoinView(RedirectView):
             return HttpResponseRedirect(reverse('index'))
         member.active = True
         member.save()
+
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'guild_{guild.id}',
+            {
+                'type': 'chat_member_joined',
+                'member': {
+                    'id': member.id,
+                }
+            }
+        )
+
         return super(GuildJoinView, self).get(self, request, *args, **kwargs)
 
 

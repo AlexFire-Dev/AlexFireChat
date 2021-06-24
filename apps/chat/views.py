@@ -1,5 +1,7 @@
 import json
 
+import channels.layers
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -102,6 +104,17 @@ class GuildMemberKick(RedirectView):
         member.admin = False
         member.save()
 
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'guild_{guild.id}',
+            {
+                'type': 'chat_member_kicked',
+                'member': {
+                    'id': member.id,
+                }
+            }
+        )
+
         return super(GuildMemberKick, self).get(self, request, *args, **kwargs)
 
 
@@ -132,6 +145,17 @@ class GuildMemberBan(RedirectView):
         member.active = False
         member.admin = False
         member.save()
+
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'guild_{guild.id}',
+            {
+                'type': 'chat_member_banned',
+                'member': {
+                    'id': member.id,
+                }
+            }
+        )
 
         return super(GuildMemberBan, self).get(self, request, *args, **kwargs)
 

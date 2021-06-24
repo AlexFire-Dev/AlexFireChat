@@ -234,22 +234,22 @@ class GuildConsumer(AsyncWebsocketConsumer):
         try:
             self.system = User.objects.get(system=True)
         except:
-            return
+            pass
         token = dict(self.scope['headers']).get(b'authorization')
         if token:
             token = token[6:].decode('UTF-8')
             try:
                 user = Token.objects.get(key=token).user
+                self.scope['user'] = user
             except:
-                return
-            self.scope['user'] = user
+                pass
         if self.scope.get('user'):
             if self.scope['user'] != self.system:
                 try:
                     self.scope['member'] = Member.objects.get(user=self.scope['user'], guild_id=self.guild_id)
                 except:
-                    return
+                    pass
         try:
             self.scope['guild'] = Guild.objects.get(id=self.guild_id)
         except:
-            return
+            pass

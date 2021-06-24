@@ -29,8 +29,8 @@ DEBUG = bool(int(os.getenv('DEBUG', '1')))
 
 ALLOWED_HOSTS = ['*']
 
-HOST = '127.0.0.1:8000'
-SYSTEM_TOKEN = '8cd4acae95d59338845de7ac1bbd40a6587c61e5'
+HOST = os.getenv('HOST', '127.0.0.1:8000')
+SYSTEM_TOKEN = os.getenv('SYSTEM_TOKEN')
 
 
 # Application definition

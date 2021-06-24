@@ -17,6 +17,13 @@
     .join__text {
         margin-right: 7px;
     }
+
+    .guild-link__poster {
+        width: 75px;
+        height: 75px;
+        border-radius: 25%;
+        border: solid #0d6efd 2px;
+    }
     </style>
 {% endblock %}
 
@@ -29,7 +36,7 @@
         </form>
         <hr style="margin: 0">
         {% for member in membership %}
-            {% include 'chat/guild_link.html' with id=member.guild.id title=member.guild.name %}
+            {% include 'chat/guild_link.html' with id=member.guild.id title=member.guild.name poster=member.guild.poster %}
         {% endfor %}
     </div>
 {% endblock %}

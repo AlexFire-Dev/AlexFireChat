@@ -44,6 +44,9 @@
             {% include 'forms/form_field_text.html' with label='Название' value=form.name.value name=form.name.name maxlength=30 width='300px' %}
             <br>
             {% include 'forms/form_field_file.html' with label='Сменить постер' name=form.poster.name width='300px' %}
+            {% if guild.poster %}
+                {% include 'forms/form_field_check.html' with label='Удалить постер' name='poster-clear' %}
+            {% endif %}
 
             <button class="btn btn-primary" type="submit" style="margin-top: 30px">Сохранить</button>
         </form>

@@ -108,12 +108,19 @@ class BotJoinView(RedirectView):
         member.save()
 
         channel_layer = channels.layers.get_channel_layer()
+        username = member.user.username
+        if member.user.get_full_name():
+            username = member.user.get_full_name()
         async_to_sync(channel_layer.group_send)(
             f'guild_{guild.id}',
             {
                 'type': 'chat_member_joined',
                 'member': {
                     'id': member.id,
+                    'user': member.user.id,
+                    'username': username,
+                    'admin': member.admin,
+                    'bot': member.user.bot,
                 }
             }
         )

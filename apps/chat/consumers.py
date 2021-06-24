@@ -146,12 +146,14 @@ class GuildConsumer(AsyncWebsocketConsumer):
         }))
 
     async def chat_member_joined(self, event):
-        member = event['member']['id']
-
         await self.send(text_data=json.dumps({
             'action': 'joined',
             'member': {
-                'id': member,
+                'id': event['member']['id'],
+                'user': event['member']['user'],
+                'username': event['member']['username'],
+                'admin': event['member']['admin'],
+                'bot': event['member']['bot'],
             },
             'guild': {
                 'id': self.guild_id,

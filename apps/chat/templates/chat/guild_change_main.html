@@ -10,6 +10,19 @@
 {% endblock %}
 
 
+{% block style %}
+    <style>
+    .guild__poster {
+        border: solid #0d6efd 3px;
+        width: 175px;
+        height: 175px;
+        border-radius: 20%;
+        margin-bottom: 25px;
+    }
+    </style>
+{% endblock %}
+
+
 {% block main %}
     <div class="container">
         <h2 style="margin-bottom: 10px; margin-top: 20px">Настройки сервера</h2>
@@ -21,10 +34,16 @@
             <a href="{% url 'guild-change-links' guild.id %}" class="btn btn-primary">Приглашения</a>
         </div>
 
-        <form method="post" style="margin-top: 20px; margin-bottom: 20px">
+        <form method="post" enctype="multipart/form-data" style="margin-top: 20px; margin-bottom: 20px">
             {% csrf_token %}
 
+            {% if guild.poster %}
+                <img src="{{ guild.poster.url }}" class="guild__poster" alt="poster">
+            {% endif %}
+
             {% include 'forms/form_field_text.html' with label='Название' value=form.name.value name=form.name.name maxlength=30 width='300px' %}
+            <br>
+            {% include 'forms/form_field_file.html' with label='Сменить постер' name=form.poster.name width='300px' %}
 
             <button class="btn btn-primary" type="submit" style="margin-top: 30px">Сохранить</button>
         </form>

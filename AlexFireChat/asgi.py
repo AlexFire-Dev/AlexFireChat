@@ -21,6 +21,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 
 import apps.chat.routing
 
+
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
     'websocket': AuthMiddlewareStack(

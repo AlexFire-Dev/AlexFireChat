@@ -10,13 +10,13 @@
             </div>
             {% if not member.is_admin %}
                 <div style="display: flex">
-                    <button onclick="kickMember({{ member.id }})" href="" style="margin-right: 15px" class="btn btn-warning">Выгнать</button>
-                    <button onclick="banMember({{ member.id }})" href="" class="btn btn-danger">Забанить</button>
+                    <a href="{% url 'guild-member-kick' guild.id member.id %}" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>
+                    <a href="{% url 'guild-member-ban' guild.id member.id %}" class="btn btn-danger">Забанить</a>
                 </div>
             {% elif user == guild.creator and member.user != user %}
                 <div style="display: flex">
-                    <button onclick="kickMember({{ member.id }})" href="" style="margin-right: 15px" class="btn btn-warning">Выгнать</button>
-                    <button onclick="banMember({{ member.id }})" href="" class="btn btn-danger">Забанить</button>
+                    <a href="{% url 'guild-member-kick' guild.id member.id %}" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>
+                    <a href="{% url 'guild-member-ban' guild.id member.id %}" class="btn btn-danger">Забанить</a>
                 </div>
             {% endif %}
         </div>

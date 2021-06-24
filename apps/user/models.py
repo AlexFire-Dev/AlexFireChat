@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True, null=True, blank=True)
     avatar = models.ImageField(upload_to='images/user/avatars', null=True, blank=True)
+    system = models.BooleanField(default=False)
     bot = models.BooleanField(default=False)
 
     username_validator = UnicodeUsernameValidator()
@@ -18,12 +19,12 @@ class User(AbstractUser):
         help_text=_('Обязательное поле. Не более 30 символов. Только буквы, цифры и символы @/./+/-/_.'),
         validators=[username_validator],
         error_messages={
-            'unique': _("A user with that username already exists."),
+            'unique': _('A user with that username already exists.'),
         },
     )
 
     def __str__(self):
-        return str(self.id)
+        return self.username
 
     def GenerateBotToken(self):
         if self.bot:

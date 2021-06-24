@@ -14,7 +14,7 @@ class UserAdmin(DefaultUserAdmin):
         (None, {'fields': ('avatar', 'username', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'bot', 'groups', 'user_permissions'),
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'bot', 'system', 'groups', 'user_permissions'),
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )

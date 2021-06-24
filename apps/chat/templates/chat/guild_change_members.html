@@ -37,14 +37,6 @@
         'ws://' + window.location.host + '/ws/chat/' + guildId + '/'
     );
 
-    guildSocket.onclose = function (e) {
-        console.warn('Chat socket closed unexpectedly');
-    };
-
-    guildSocket.onopen = function (e) {
-        console.info('Chat socket connected');
-    };
-
     guildSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data);
@@ -53,19 +45,5 @@
             document.getElementById(`id_${data.member.id}`).remove();
         }
     };
-
-    function kickMember(member_id) {
-        guildSocket.send(JSON.stringify({
-            'action': 'kick',
-            'member_id': member_id,
-        }));
-    }
-
-    function banMember(member_id) {
-        guildSocket.send(JSON.stringify({
-            'action': 'ban',
-            'member_id': member_id,
-        }));
-    }
     </script>
 {% endblock %}

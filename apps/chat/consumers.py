@@ -34,29 +34,6 @@ class GuildConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         action = text_data_json.get('action')
 
-        if self.system == self.scope['user']:
-            if action == 'kick':
-                await self.channel_layer.group_send(
-                    self.guild_room_name,
-                    {
-                        'type': 'chat_member_kicked',
-                        'member': {
-                            'id': text_data_json.get('member_id'),
-                        }
-                    }
-                )
-            elif action == 'ban':
-                await self.channel_layer.group_send(
-                    self.guild_room_name,
-                    {
-                        'type': 'chat_member_banned',
-                        'member': {
-                            'id': text_data_json.get('member_id'),
-                        }
-                    }
-                )
-            return
-
         if action == 'send':
             message = text_data_json.get('message')
             message, member, result = await self.create_message(message=message)
@@ -246,10 +223,6 @@ class GuildConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def setup(self):
-        try:
-            self.system = User.objects.get(system=True)
-        except:
-            pass
         token = dict(self.scope['headers']).get(b'authorization')
         if token:
             token = token[6:].decode('UTF-8')
@@ -259,11 +232,10 @@ class GuildConsumer(AsyncWebsocketConsumer):
             except:
                 pass
         if self.scope.get('user'):
-            if self.scope['user'] != self.system:
-                try:
-                    self.scope['member'] = Member.objects.get(user=self.scope['user'], guild_id=self.guild_id)
-                except:
-                    pass
+            try:
+                self.scope['member'] = Member.objects.get(user=self.scope['user'], guild_id=self.guild_id)
+            except:
+                pass
         try:
             self.scope['guild'] = Guild.objects.get(id=self.guild_id)
         except:

@@ -2,10 +2,15 @@
 
 
 {% block main %}
-    <form class="container" method="post">
+    <form class="container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <h2 style="margin-top: 25px">Редактировать профиль</h2>
+        <br>
+        {% include 'forms/form_field_file.html' with label='Сменить аватар' name=form.avatar.name width='300px' %}
+        {% if user.avatar %}
+            {% include 'forms/form_field_check.html' with label='Удалить аватар' name='avatar-clear' %}
+        {% endif %}
         <br>
         {% include 'forms/form_field_text.html' with label=form.username.label name=form.username.name value=form.username.value errors=form.username.errors %}
         <br>

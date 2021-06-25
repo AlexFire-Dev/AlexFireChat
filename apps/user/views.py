@@ -6,10 +6,10 @@ from .models import User
 from .forms import ProfileChangeForm
 
 
-def AccountView(request, userid):
+def AccountView(request):
 
     context = {
-        'accountuser': get_object_or_404(User, id=userid),
+        'accountuser': request.user,
     }
 
     return render(request, 'user/profile.html', context=context)
@@ -23,5 +23,5 @@ class ProfileChangeView(UpdateView):
         return self.request.user
 
     def get_success_url(self):
-        url = reverse('profile', args=[self.request.user.id])
+        url = reverse('profile')
         return url

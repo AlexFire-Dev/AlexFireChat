@@ -7,12 +7,8 @@
         <h2 style="margin-top: 25px">Профиль</h2>
         <br>
         <div class="row">
-            {% if user == accountuser %}
-                {% include 'forms/form_field_text.html' with label='Имя пользователя' name='username' value=accountuser.username classes='col-sm-6' readonly=True %}
-                {% include 'forms/form_field_email.html' with label='Email' name='email' value=accountuser.email classes='col-sm-6' readonly=True %}
-            {% else %}
-                {% include 'forms/form_field_text.html' with label='Имя пользователя' name='username' value=accountuser.username readonly=True %}
-            {% endif %}
+            {% include 'forms/form_field_text.html' with label='Имя пользователя' name='username' value=accountuser.username classes='col-sm-6' readonly=True %}
+            {% include 'forms/form_field_email.html' with label='Email' name='email' value=accountuser.email classes='col-sm-6' readonly=True %}
         </div>
         <br>
         <div class="row">
@@ -31,11 +27,9 @@
         </div>
         <br>
 
-        {% if accountuser == user %}
-            <div class="main__form" style="margin-top: 30px">
-                <a href="{% url 'profile-change' %}" class="btn btn-primary" style="margin-right: 10px;">Редактировать</a>
-                <a href="{% url 'password_change' %}" class="btn btn-danger">Сменить пароль</a>
-            </div>
-        {% endif %}
+        <div class="main__form" style="margin-top: 30px">
+            <a href="{% url 'profile-change' %}" class="btn btn-primary" style="margin-right: 10px;">Редактировать</a>
+            <a href="{% url 'password_change' %}" class="btn btn-danger">Сменить пароль</a>
+        </div>
     </div>
 {% endblock %}

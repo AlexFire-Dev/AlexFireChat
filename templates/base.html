@@ -21,7 +21,7 @@
     <body>
         <header class="header">
             <div class="{% block header_container_class %}container-xl{% endblock %}">
-                <a {% if user.is_authenticated %}href="{% url 'profile' user.id %}" {% endif %}class="header__profile">
+                <a {% if user.is_authenticated %}href="{% url 'profile' %}" {% endif %}class="header__profile">
                     <img
                         class="header__profile__img"
                         src="{% static 'images/user.svg' %}"
@@ -41,9 +41,8 @@
                         {% block extra-header %}<a class="header__controls__link" href="{% url 'guild-create' %}">Создать сервер</a>{% endblock %}
                         <a class="header__controls__link" href="{% url 'logout' %}">Выйти</a>
                     {% else %}
-                        <a class="header__controls__link" href="{% url 'index' %}">Главная</a>
-                        <a class="header__controls__link" href="{% url 'register' %}">Регистрация</a>
                         <a class="header__controls__link" href="{% url 'login' %}">Войти</a>
+                        <a class="header__controls__link" href="{% url 'register' %}">Регистрация</a>
                     {% endif %}
                 </div>
           </div>

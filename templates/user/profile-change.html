@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load gravatar %}
 
 
 {% block main %}
@@ -21,10 +22,12 @@
             {% endwith %}
         </div>
         <br>
-        <div class="main__form" style="margin-top: 30px">
+            {% include 'forms/form_field_switch.html' with label='Использовать граватар' name=form.use_gravatar.name value=form.use_gravatar.value %}
+        <br>
+        <div class="main__form" style="margin-top: 30px; margin-bottom: 15px">
             <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Сохранить</button>
+            <a href="{% gravatar_profile_url user.email %}" class="btn btn-warning" style="margin-right: 10px;">Граватар</a>
             <a href="{% url 'profile' %}" class="btn btn-secondary">Назад</a>
-            <br>
         </div>
     </form>
 {% endblock %}

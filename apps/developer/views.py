@@ -38,7 +38,9 @@ class BotCreateView(CreateView):
 
         user = User.objects.create(**user_args)
         user.set_unusable_password()
+        user.email = f'{user.id}@chat.bot'
         user.GenerateBotToken()
+        user.save()
         bot = Bot.objects.create(master=self.request.user, account=user)
         return HttpResponseRedirect(reverse_lazy('developer-index'))
 

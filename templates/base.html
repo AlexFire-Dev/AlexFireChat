@@ -1,4 +1,6 @@
 {% load static %}
+{% load gravatar %}
+
 
 <!DOCTYPE html>
 
@@ -22,19 +24,12 @@
         <header class="header">
             <div class="{% block header_container_class %}container-xl{% endblock %}">
                 <a {% if user.is_authenticated %}href="{% url 'profile' %}" {% endif %}class="header__profile">
-                    {% if not user.avatar %}
-                        <img
-                            class="header__profile__img"
-                            src="{% static 'images/user.svg' %}"
-                            alt="userpic"
-                        />
-                    {% else %}
-                        <img
-                            class="header__profile__img"
-                            src="{{ user.avatar.url }}"
-                            alt="userpic"
-                        />
-                    {% endif %}
+                    <img
+                        class="header__profile__img"
+                        src="{% if user.avatar %}{{ user.avatar.url }}{% elif user.use_gravatar %}{% gravatar_url user.email %}{% else %}{% static 'images/user.svg' %}{% endif %}"
+                        alt="userpic"
+                    />
+
                     <span class="header__profile__bio">
                         {% if user.is_authenticated %}
                             {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}

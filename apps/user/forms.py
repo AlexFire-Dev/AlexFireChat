@@ -12,4 +12,4 @@ class RegisterForm(RegistrationForm):
 class ProfileChangeForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('avatar', 'username', 'first_name', 'last_name')
+        fields = ('avatar', 'username', 'first_name', 'last_name', 'use_gravatar')

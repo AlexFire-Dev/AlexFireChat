@@ -6,10 +6,11 @@ from rest_framework.authtoken.models import Token
 
 
 class User(AbstractUser):
-    email = models.EmailField(_('email address'), unique=True, null=True, blank=True)
+    email = models.EmailField(_('email address'), unique=True)
     avatar = models.ImageField(upload_to='images/user/avatars', null=True, blank=True)
     system = models.BooleanField(default=False)
     bot = models.BooleanField(default=False)
+    use_gravatar = models.BooleanField(default=False)
 
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(

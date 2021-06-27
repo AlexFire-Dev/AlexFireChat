@@ -73,7 +73,7 @@
     const guildId = {{ guild.id }};
 
     const guildSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + guildId + '/'
+        'wss://' + window.location.host + '/ws/chat/' + guildId + '/'
     );
 
     guildSocket.onclose = function (e) {

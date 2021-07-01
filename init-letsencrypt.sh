@@ -1,6 +1,6 @@
 #!/bin/bash
 
-domains=(alexfire.shvarev.com)
+domains=(alexfire.shvarev.com mail.alexfire.shvarev.com)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="alex@shvarev.com" # Adding a valid address is strongly recommended

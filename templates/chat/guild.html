@@ -57,13 +57,13 @@
 
 {% block main %}
     <div class="container-md feed">
-            <div id="feed" class="messages">
-                {% for message in messages %}{% include 'chat/guild_message.html' %}{% endfor %}
-            </div>
-            <div class="messageSend">
-                <textarea style="overflow: hidden; resize: none" placeholder="Сообщение" class="form-control" id="TextMessageInput" rows="2"></textarea>
-                <button class="messageSend__button" id="TextMessageButton"><img width="25px" height="25px" src="{% static 'images/send.svg' %}" alt="send"></button>
-            </div>
+        <div id="feed" class="messages">
+            {% for message in messages %}{% include 'chat/guild_message.html' %}{% endfor %}
+        </div>
+        <div class="messageSend">
+            <textarea style="overflow: hidden; resize: none" placeholder="Сообщение" class="form-control" id="TextMessageInput" rows="2"></textarea>
+            <button class="messageSend__button" id="TextMessageButton"><img width="25px" height="25px" src="{% static 'images/send.svg' %}" alt="send"></button>
+        </div>
     </div>
 {% endblock %}
 
@@ -73,7 +73,7 @@
     const guildId = {{ guild.id }};
 
     const guildSocket = new WebSocket(
-        'wss://' + window.location.host + '/ws/chat/' + guildId + '/'
+        '{{ websocket_protocol }}://' + window.location.host + '/ws/chat/' + guildId + '/'
     );
 
     guildSocket.onclose = function (e) {

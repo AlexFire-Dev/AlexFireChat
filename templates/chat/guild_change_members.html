@@ -34,7 +34,7 @@
     const guildId = {{ guild.id }};
 
     const guildSocket = new WebSocket(
-        'wss://' + window.location.host + '/ws/chat/' + guildId + '/'
+        '{{ websocket_protocol }}://' + window.location.host + '/ws/chat/' + guildId + '/'
     );
 
     guildSocket.onmessage = function (e) {

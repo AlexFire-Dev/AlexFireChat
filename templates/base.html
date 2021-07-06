@@ -51,8 +51,9 @@
           </div>
         </header>
 
-        {% block main %}{% endblock %}
-
-        {% block script %}{% endblock %}
+        {% with 'wss' as websocket_protocol %}
+            {% block main %}{% endblock %}
+            {% block script %}{% endblock %}
+        {% endwith %}
     </body>
 </html>

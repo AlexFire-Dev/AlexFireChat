@@ -3,6 +3,7 @@ import json
 import channels.layers
 from asgiref.sync import async_to_sync
 from django.conf import settings
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -34,12 +35,15 @@ class GuildView(TemplateView):
 
         guild = get_object_or_404(Guild, id=kwargs.get('guild'))
         member = get_object_or_404(Member, user=self.request.user, guild=guild, active=True, banned=False)
-        messages = Message.objects.filter(guild=guild)
+        messages = Message.objects.filter(guild=guild).order_by('id')
+        paginator = Paginator(messages, settings.MESSAGES_PER_LOAD)
+        messages = paginator.get_page(paginator.num_pages)
 
         context.update({
             'guild': guild,
             'member': member,
             'messages': messages,
+            'paginator': paginator,
         })
         return context
 

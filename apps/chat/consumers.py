@@ -2,6 +2,8 @@ import json
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.conf import settings
+from django.core.paginator import Paginator
 from rest_framework.authtoken.models import Token
 
 from .models import *
@@ -31,8 +33,11 @@ class GuildConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data=None, bytes_data=None):
-        text_data_json = json.loads(text_data)
-        action = text_data_json.get('action')
+        try:
+            text_data_json = json.loads(text_data)
+            action = text_data_json.get('action')
+        except:
+            return
 
         if action == 'send':
             message = text_data_json.get('message')
@@ -85,6 +90,17 @@ class GuildConsumer(AsyncWebsocketConsumer):
                         'message_id': one_id,
                     }
                 )
+
+        elif action == 'load':
+            page = int(text_data_json.get('page_id'))
+            messages = await self.get_page(page)
+            await self.send(text_data=json.dumps({
+                'action': 'load',
+                'guild': {
+                    'id': self.guild_id,
+                },
+                'messages': messages,
+            }))
 
     # Receive message from room group
     async def chat_message_send(self, event):
@@ -222,6 +238,31 @@ class GuildConsumer(AsyncWebsocketConsumer):
             return None
 
     @database_sync_to_async
+    def get_page(self, page: int):
+        try:
+            page = self.scope['paginator'].get_page(page)
+        except:
+            return
+        messages = []
+        for message in page:
+            nickname = message.author.user.username
+            if message.author.user.get_full_name():
+                nickname = message.author.user.get_full_name()
+            messages.append({
+                'author': {
+                    'id': message.author.id,
+                    'nickname': nickname,
+                },
+                'message': {
+                    'id': message.id,
+                    'text': message.text,
+                    'created_at': message.created_at.strftime('%Y.%m.%d %H:%M'),
+                    'modified_at': message.modified_at.strftime('%Y.%m.%d %H:%M'),
+                },
+            })
+        return messages
+
+    @database_sync_to_async
     def setup(self):
         token = dict(self.scope['headers']).get(b'authorization')
         if token:
@@ -238,5 +279,10 @@ class GuildConsumer(AsyncWebsocketConsumer):
                 pass
         try:
             self.scope['guild'] = Guild.objects.get(id=self.guild_id)
+        except:
+            pass
+        try:
+            messages = Message.objects.filter(guild_id=self.guild_id).order_by('id')
+            self.scope['paginator'] = Paginator(messages, settings.MESSAGES_PER_LOAD)
         except:
             pass

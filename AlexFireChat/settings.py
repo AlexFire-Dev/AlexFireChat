@@ -29,9 +29,6 @@ DEBUG = bool(int(os.getenv('DEBUG', '1')))
 
 ALLOWED_HOSTS = ['*']
 
-HOST = os.getenv('HOST', '127.0.0.1:8000')
-SYSTEM_TOKEN = os.getenv('SYSTEM_TOKEN')
-
 
 # Application definition
 
@@ -62,6 +59,8 @@ LOGIN_URL = reverse_lazy('login')
 
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
+
+MESSAGES_PER_LOAD = 10
 
 # Account activation code
 ACCOUNT_ACTIVATION_DAYS = 2

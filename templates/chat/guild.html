@@ -70,6 +70,7 @@
 
 {% block script %}
     <script>
+    let page = {{ paginator.num_pages }};
     const guildId = {{ guild.id }};
 
     const guildSocket = new WebSocket(
@@ -81,7 +82,14 @@
     };
 
     guildSocket.onopen = function (e) {
-        console.info('Chat socket connected');
+        const feed = document.querySelector(`#feed`);
+        if (page > 1 && feed.scrollTop <= 100) {
+            page = page - 1;
+            guildSocket.send(JSON.stringify({
+                'action': 'load',
+                'page_id': page,
+            }));
+        }
     };
 
     guildSocket.onmessage = function (e) {
@@ -120,6 +128,38 @@
             feed.scrollTop = feed.scrollHeight
         } else if (data.action === 'delete') {
             document.getElementById(`id_${data.message.id}`).remove();
+        } else if (data.action === 'load') {
+            const feed = document.querySelector(`#feed`);
+            let html = '';
+            for (let event of data.messages) {
+                let text = event.message.text.replace(/\n/g, '<br>');
+
+                const created_at = moment(moment.utc(event.message.created_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
+                const modified_at = moment(moment.utc(event.message.modified_at, 'YYYY-MM-DD HH:mm').toDate()).local().format('DD.MM.YYYY HH:mm');
+
+                let href = ''
+                if (event.author.id === {{ member.id }} || true === {{ member.admin|lower }})  {
+                    href = `<button class="deleteButton" onclick="deleteMessage(${ event.message.id })" type="button" href="#"><img src="{% static 'images/delete.svg' %}" alt="delete" width="21px" height="21px"></button>`;
+                }
+
+                html +=
+                    `<div id="id_${event.message.id}" class="card text-center" style="margin-top: 15px">` +
+                        `<header class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center">` +
+                            `<span style="font-weight: bold">${event.author.nickname}</span>` +
+                            `${href}` +
+                        `</header>` +
+                        `<div class="card-body">` +
+                            `<p class="card-text" style="text-align: start">${text}</p>` +
+                        `</div>` +
+                        `<footer class="card-footer text-muted" style="display: flex; align-items: flex-start; justify-content: space-between">` +
+                            `<span class="text-muted" style="display: flex; font-size: 15px">Создано: <div class="local-time">${created_at}</div></span>` +
+                            `<span class="text-muted" style="display: flex; font-size: 15px">Обновлено: <div class="local-time">${modified_at}</div></span>` +
+                        `</footer>` +
+                    `</div>`;
+            }
+            let scroll = feed.scrollHeight - feed.scrollTop;
+            feed.innerHTML = html + feed.innerHTML;
+            feed.scrollTop = feed.scrollHeight - scroll;
         }
     };
 
@@ -158,6 +198,17 @@
         for (const dt of document.querySelectorAll('.local-time')) {
             const utcTime = moment.utc(dt.innerHTML, 'YYYY-MM-DD HH:mm').toDate();
             dt.innerHTML = moment(utcTime).local().format('DD.MM.YYYY HH:mm');
+        }
+
+        feed.onscroll = function () {
+            if (page > 1 && feed.scrollTop <= 100) {
+                page = page - 1;
+
+                guildSocket.send(JSON.stringify({
+                    'action': 'load',
+                    'page_id': page,
+                }));
+            }
         }
     });
     </script>

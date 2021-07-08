@@ -72,6 +72,7 @@
     <script>
     let page = {{ paginator.num_pages }};
     const guildId = {{ guild.id }};
+    let loading = false;
 
     const guildSocket = new WebSocket(
         '{{ websocket_protocol }}://' + window.location.host + '/ws/chat/' + guildId + '/'
@@ -201,13 +202,16 @@
         }
 
         feed.onscroll = function () {
-            if (page > 1 && feed.scrollTop <= 100) {
+            if (page > 1 && feed.scrollTop <= 125 && !loading) {
+                loading = true;
                 page = page - 1;
 
                 guildSocket.send(JSON.stringify({
                     'action': 'load',
                     'page_id': page,
                 }));
+
+                loading = false;
             }
         }
     });

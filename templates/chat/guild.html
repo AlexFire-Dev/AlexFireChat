@@ -161,6 +161,7 @@
             let scroll = feed.scrollHeight - feed.scrollTop;
             feed.innerHTML = html + feed.innerHTML;
             feed.scrollTop = feed.scrollHeight - scroll;
+            loading = false;
         }
     };
 
@@ -210,8 +211,6 @@
                     'action': 'load',
                     'page_id': page,
                 }));
-
-                loading = false;
             }
         }
     });

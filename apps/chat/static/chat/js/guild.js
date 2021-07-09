@@ -1,4 +1,10 @@
 let loading = false;
+const loading_html =
+    '<div id="loading" class="d-flex justify-content-center">' +
+    '<div class="spinner-border" role="status">' +
+    '<span class="visually-hidden">Loading...</span>' +
+    '</div>' +
+    '</div>';
 
 const guildSocket = new WebSocket(
      websocket_protocol + '://' + window.location.host + '/ws/chat/' + guildId + '/'
@@ -13,6 +19,10 @@ guildSocket.onopen = function (e) {
     if (page > 1 && feed.scrollTop <= 100 && !loading) {
         loading = true;
         page = page - 1;
+
+        feed.innerHTML =
+            loading_html +
+            feed.innerHTML;
 
         guildSocket.send(JSON.stringify({
             'action': 'load',
@@ -87,6 +97,7 @@ guildSocket.onmessage = function (e) {
                 `</div>`;
         }
         let scroll = feed.scrollHeight - feed.scrollTop;
+        document.getElementById(`loading`).remove();
         feed.innerHTML = html + feed.innerHTML;
         feed.scrollTop = feed.scrollHeight - scroll;
         loading = false;
@@ -134,6 +145,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (page > 1 && feed.scrollTop <= 125 && !loading) {
             loading = true;
             page = page - 1;
+
+            feed.innerHTML =
+                loading_html +
+                feed.innerHTML;
 
             guildSocket.send(JSON.stringify({
                 'action': 'load',

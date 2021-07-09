@@ -1,0 +1,16 @@
+.workplace {
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.join {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 100px;
+    flex-wrap: wrap;
+}
+
+.join__text {
+    margin-right: 7px;
+}

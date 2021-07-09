@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block extra-header %}
+    {% if member.is_admin %}<a class="header__controls__link" href="{% url 'guild-change-main' guild.id %}">Настройки сервера</a>{% endif %}
+{% endblock %}
+
+
+{% block styles %}{% static 'chat/css/guild.css' %}{% endblock %}
+
+
+{% block main %}
+    <div class="container-md feed">
+        <div id="feed" class="messages">
+            {% for message in messages %}{% include 'chat/guild_message.html' %}{% endfor %}
+        </div>
+        <div class="messageSend">
+            <textarea style="overflow: hidden; resize: none" placeholder="Сообщение" class="form-control" id="TextMessageInput" rows="2"></textarea>
+            <button class="messageSend__button" id="TextMessageButton"><img width="25px" height="25px" src="{% static 'images/send.svg' %}" alt="send"></button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script>
+    let page = {{ paginator.num_pages }};
+    const guildId = {{ guild.id }};
+    const redirect_url = '{% url 'index' %}';
+    const delete_url = '{% static 'images/delete.svg' %}';
+    const member_id = {{ member.id }};
+    const member_admin = {{ member.admin|lower }};
+    </script>
+
+    <script src="{% static 'chat/js/guild.js' %}"></script>
+{% endblock %}

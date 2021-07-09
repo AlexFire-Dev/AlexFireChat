@@ -1,0 +1,7 @@
+.guild__poster {
+    border: solid rgb(129, 163, 240) 3px;
+    width: 200px;
+    height: 200px;
+    border-radius: 20%;
+    margin-bottom: 25px;
+}

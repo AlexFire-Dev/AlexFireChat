@@ -30,7 +30,6 @@
                         src="{% if user.avatar %}{{ user.avatar.url }}{% elif user.use_gravatar %}{% gravatar_url user.email %}{% else %}{% static 'images/user.svg' %}{% endif %}"
                         alt="userpic"
                     />
-
                     <span class="header__profile__bio">
                         {% if user.is_authenticated %}
                             {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
@@ -54,6 +53,10 @@
 
         {% with 'wss' as websocket_protocol %}
             {% block main %}{% endblock %}
+
+            <script>
+            const websocket_protocol = '{{ websocket_protocol }}';
+            </script>
             {% block script %}{% endblock %}
         {% endwith %}
     </body>

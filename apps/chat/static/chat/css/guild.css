@@ -1,0 +1,39 @@
+.feed {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex-grow: 1;
+    background-color: white;
+}
+
+.messageSend {
+    display: flex;
+    padding-top: 20px;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.messageSend__button {
+    border: none;
+    background-color: white;
+    margin-left: 7px;
+    margin-bottom: 5px;
+}
+
+.deleteButton {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100%;
+    height: 400px;
+}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block extra-header %}
+    {% if me.is_admin %}<a class="header__controls__link" href="{% url 'guild-chat' guild.id %}">{{ guild.name }}</a>{% endif %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container body__scroll">
+        <h2 style="margin-bottom: 10px; margin-top: 20px">Настройки сервера</h2>
+
+        <div class="btn-group-vertical" style="width: 200px; margin-bottom: 15px">
+            <a href="{% url 'guild-change-main' guild.id %}" class="btn btn-primary">Основные</a>
+            <span class="btn btn-success active">Участники</span>
+            <a href="{% url 'guild-change-bans' guild.id %}" class="btn btn-danger">Баны</a>
+            <a href="{% url 'guild-change-links' guild.id %}" class="btn btn-primary">Приглашения</a>
+        </div>
+
+        <div id="members-list">
+            {% for member in members %}
+                {% include 'chat/member_info.html' %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script>
+    const guildId = {{ guild.id }};
+    const user_id = {{ user.id }};
+    const guild_creator_id = {{ guild.creator.id }};
+    </script>
+
+    <script src="{% static 'chat/js/guild_change_members.js' %}"></script>
+{% endblock %}

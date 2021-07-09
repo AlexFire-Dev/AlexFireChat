@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 
 {% block title %}AlexFireChat-Developer{% endblock %}
@@ -9,14 +10,7 @@
 {% endblock %}
 
 
-{% block style %}
-    <style>
-    .myBots {
-        margin-top: 20px;
-        margin-bottom: 5px;
-    }
-    </style>
-{% endblock %}
+{% block styles %}{% static 'developer/css/index.css' %}{% endblock %}
 
 
 {% block main %}

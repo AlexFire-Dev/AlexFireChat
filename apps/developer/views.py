@@ -113,6 +113,7 @@ class BotJoinView(RedirectView):
         username = member.user.username
         if member.user.get_full_name():
             username = member.user.get_full_name()
+
         async_to_sync(channel_layer.group_send)(
             f'guild_{guild.id}',
             {
@@ -127,5 +128,13 @@ class BotJoinView(RedirectView):
             }
         )
 
-        return super(BotJoinView, self).get(self, request, *args, **kwargs)
+        async_to_sync(channel_layer.group_send)(
+            'bots',
+            {
+                'type': 'bot_joined',
+                'guild': guild.id,
+                'user': member.user.id,
+            }
+        )
 
+        return super(BotJoinView, self).get(self, request, *args, **kwargs)

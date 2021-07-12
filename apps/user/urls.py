@@ -14,12 +14,7 @@ urlpatterns = [
 
     path('', include('django_registration.backends.activation.urls')),
     path('', include('django.contrib.auth.urls')),
-    path('create/',
-         RegistrationView.as_view(
-             form_class=RegisterForm, success_url=reverse_lazy('django_registration_complete')
-         ),
-         name='register'
-         ),
+    path('create/', RegistrationView.as_view(form_class=RegisterForm, success_url=reverse_lazy('django_registration_complete')), name='register'),
 
     path('me/', login_required(AccountView), name='profile'),
     path('change/', login_required(ProfileChangeView.as_view()), name='profile-change'),

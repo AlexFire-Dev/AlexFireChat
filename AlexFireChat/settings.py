@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'user.User'
+AUTHENTICATION_BACKENDS = ['contrib.backends.EmailBackend']
 
 LOGIN_URL = reverse_lazy('login')
 

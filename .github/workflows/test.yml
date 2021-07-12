@@ -18,5 +18,4 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Run
-        run: |
-          echo ${{ env.GITHUB_RUN_NUMBER }}
+        run: echo "${{ env.GITHUB_RUN_NUMBER }}"

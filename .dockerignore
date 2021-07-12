@@ -4,6 +4,7 @@
 # Allowed
 !apps/
 !assets/
+!contrib/
 !templates/
 !AlexFireChat/
 

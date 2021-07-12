@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: server-connection
+      - name: CD
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -22,6 +22,9 @@ jobs:
           script: |
             cd ${{ secrets.DIRECTORY }}
             sudo git pull
+            sudo docker tag alexfirechat_web:latest alexfirechat_web:old
+            sudo docker build -t alexfirechat_web:latest .
+            sudo docker-compose pull
             sudo docker-compose down
-            sudo docker image rm alexfirechat_web:latest
             sudo docker-compose up --detach
+            sudo docker image rm alexfirechat_web:old

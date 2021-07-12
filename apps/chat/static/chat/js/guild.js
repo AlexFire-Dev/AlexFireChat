@@ -29,6 +29,22 @@ guildSocket.onopen = function (e) {
             'page_id': page,
         }));
     }
+
+    feed.onscroll = function () {
+        if (page > 1 && feed.scrollTop <= 125 && !loading) {
+            loading = true;
+            page = page - 1;
+
+            feed.innerHTML =
+                loading_html +
+                feed.innerHTML;
+
+            guildSocket.send(JSON.stringify({
+                'action': 'load',
+                'page_id': page,
+            }));
+        }
+    }
 };
 
 guildSocket.onmessage = function (e) {
@@ -154,21 +170,5 @@ document.addEventListener('DOMContentLoaded', function () {
     for (const dt of document.querySelectorAll('.local-time')) {
         const utcTime = moment.utc(dt.innerHTML, 'YYYY-MM-DD HH:mm').toDate();
         dt.innerHTML = moment(utcTime).local().format('DD.MM.YYYY HH:mm');
-    }
-
-    feed.onscroll = function () {
-        if (page > 1 && feed.scrollTop <= 125 && !loading) {
-            loading = true;
-            page = page - 1;
-
-            feed.innerHTML =
-                loading_html +
-                feed.innerHTML;
-
-            guildSocket.send(JSON.stringify({
-                'action': 'load',
-                'page_id': page,
-            }));
-        }
     }
 });

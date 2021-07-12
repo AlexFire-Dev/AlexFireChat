@@ -19,4 +19,4 @@ jobs:
     steps:
       - name: Run
         run: |
-          echo ${{ env.GITHUB_SHA }}
+          echo ${{ env.GITHUB_RUN_NUMBER }}

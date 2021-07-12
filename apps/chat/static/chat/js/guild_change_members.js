@@ -22,8 +22,8 @@ guildSocket.onmessage = function (e) {
 
         let change_success =
             `<div style="display: flex">` +
-            `<a href="guild/${ guildId }/change/members/${data.member.id}/kick/" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>` +
-            `<a href="guild/${ guildId }/change/members/${data.member.id}/ban/" class="btn btn-danger">Забанить</a>` +
+            `<a href="/guild/${ guildId }/change/members/${data.member.id}/kick/" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>` +
+            `<a href="/guild/${ guildId }/change/members/${data.member.id}/ban/" class="btn btn-danger">Забанить</a>` +
             `</div>`;
         let change = ``;
         if (!data.member.admin) {

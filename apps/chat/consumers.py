@@ -15,16 +15,18 @@ class GuildConsumer(AsyncWebsocketConsumer):
         self.guild_id = self.scope['url_route']['kwargs']['guild_id']
         self.guild_room_name = f'guild_{self.guild_id}'
 
-        await self.setup()
-        if self.scope['user'].is_anonymous:
-            return
+        result = await self.setup()
 
-        await self.channel_layer.group_add(
-            self.guild_room_name,
-            self.channel_name
-        )
+        if result:
+            if self.scope['user'].is_anonymous:
+                return
 
-        await self.accept()
+            await self.channel_layer.group_add(
+                self.guild_room_name,
+                self.channel_name
+            )
+
+            await self.accept()
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
@@ -276,7 +278,7 @@ class GuildConsumer(AsyncWebsocketConsumer):
             try:
                 self.scope['member'] = Member.objects.get(user=self.scope['user'], guild_id=self.guild_id)
             except:
-                pass
+                return False
         try:
             self.scope['guild'] = Guild.objects.get(id=self.guild_id)
         except:
@@ -286,3 +288,4 @@ class GuildConsumer(AsyncWebsocketConsumer):
             self.scope['paginator'] = Paginator(messages, settings.MESSAGES_PER_LOAD)
         except:
             pass
+        return True

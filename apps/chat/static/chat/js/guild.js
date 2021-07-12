@@ -1,6 +1,6 @@
 let loading = false;
 const loading_html =
-    '<div id="loading" class="d-flex justify-content-center">' +
+    '<div id="loading" class="d-flex justify-content-center" style="margin-top: 5px">' +
     '<div class="spinner-border" role="status">' +
     '<span class="visually-hidden">Loading...</span>' +
     '</div>' +
@@ -66,7 +66,22 @@ guildSocket.onmessage = function (e) {
             `</div>`;
         feed.scrollTop = feed.scrollHeight
     } else if (data.action === 'delete') {
+        const feed = document.querySelector(`#feed`);
         document.getElementById(`id_${data.message.id}`).remove();
+
+        if (page > 1 && feed.scrollTop <= 125 && !loading) {
+            loading = true;
+            page = page - 1;
+
+            feed.innerHTML =
+                loading_html +
+                feed.innerHTML;
+
+            guildSocket.send(JSON.stringify({
+                'action': 'load',
+                'page_id': page,
+            }));
+        }
     } else if (data.action === 'load') {
         const feed = document.querySelector(`#feed`);
         let html = '';

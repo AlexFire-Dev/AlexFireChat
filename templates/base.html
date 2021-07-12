@@ -51,13 +51,11 @@
           </div>
         </header>
 
-        {% with 'wss' as websocket_protocol %}
-            {% block main %}{% endblock %}
+        {% block main %}{% endblock %}
 
-            <script>
-            const websocket_protocol = '{{ websocket_protocol }}';
-            </script>
-            {% block script %}{% endblock %}
-        {% endwith %}
+        <script>
+        const websocket_protocol = '{% if debug %}ws{% else %}wss{% endif %}';
+        </script>
+        {% block script %}{% endblock %}
     </body>
 </html>

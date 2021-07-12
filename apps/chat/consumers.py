@@ -155,27 +155,11 @@ class GuildConsumer(AsyncWebsocketConsumer):
             },
         }))
 
-    async def chat_member_kicked(self, event):
+    async def chat_member_left(self, event):
         member = event['member']['id']
 
         await self.send(text_data=json.dumps({
-            'action': 'kicked',
-            'member': {
-                'id': member,
-            },
-            'guild': {
-                'id': self.guild_id,
-            },
-        }))
-
-        if member == self.scope['member'].id:
-            await self.close()
-
-    async def chat_member_banned(self, event):
-        member = event['member']['id']
-
-        await self.send(text_data=json.dumps({
-            'action': 'banned',
+            'action': 'left',
             'member': {
                 'id': member,
             },

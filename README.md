@@ -27,6 +27,8 @@ DB_PORT=5432
 DB_NAME={{ БД postgres }}
 DEBUG=0
 
+EMAIL_HOST={{ Хост smtp }}
+EMAIL_PORT={{ Порт smtp }}
 EMAIL_USER={{ Пользователь почты }}
 EMAIL_PASSWORD={{ Пароль почты }}
 ~~~~

@@ -100,6 +100,60 @@ class GuildJoinView(RedirectView):
         return super(GuildJoinView, self).get(self, request, *args, **kwargs)
 
 
+class GuildLeaveView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('index')
+
+    def get(self, request, *args, **kwargs):
+        guild = get_object_or_404(Guild, id=self.kwargs.get('guild'))
+        me = get_object_or_404(Member, guild=guild, user=self.request.user, active=True, banned=False)
+        me.active = False
+        me.admin = False
+        me.save()
+
+        channel_layer = channels.layers.get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'guild_{guild.id}',
+            {
+                'type': 'chat_member_left',
+                'member': {
+                    'id': me.id,
+                }
+            }
+        )
+
+        return super(GuildLeaveView, self).get(self, request, *args, **kwargs)
+
+
+class GuildDeleteView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('index')
+
+    def get(self, request, *args, **kwargs):
+        guild = get_object_or_404(Guild, id=self.kwargs.get('guild'), creator=self.request.user)
+        channel_layer = channels.layers.get_channel_layer()
+        members = Member.objects.filter(guild=guild).order_by('-id')
+
+        for member in members:
+            member.admin = False
+            member.active = False
+            member.save()
+            async_to_sync(channel_layer.group_send)(
+                f'guild_{guild.id}',
+                {
+                    'type': 'chat_member_left',
+                    'member': {
+                        'id': member.id,
+                    }
+                }
+            )
+            member.delete()
+
+        guild.delete()
+
+        return super(GuildDeleteView, self).get(self, request, *args, **kwargs)
+
+
 class GuildMemberKick(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse('guild-change-members', args=[self.kwargs.get('guild')])
@@ -131,7 +185,7 @@ class GuildMemberKick(RedirectView):
         async_to_sync(channel_layer.group_send)(
             f'guild_{guild.id}',
             {
-                'type': 'chat_member_kicked',
+                'type': 'chat_member_left',
                 'member': {
                     'id': member.id,
                 }
@@ -173,7 +227,7 @@ class GuildMemberBan(RedirectView):
         async_to_sync(channel_layer.group_send)(
             f'guild_{guild.id}',
             {
-                'type': 'chat_member_banned',
+                'type': 'chat_member_left',
                 'member': {
                     'id': member.id,
                 }

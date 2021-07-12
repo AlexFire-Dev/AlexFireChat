@@ -42,6 +42,9 @@
             <button class="btn btn-primary" type="submit" style="margin-top: 30px">Сохранить</button>
         </form>
 
-        <a href="{% url 'developer-index' %}" style="margin-bottom: 10px" class="btn btn-success">Портал разработчика</a>
+        <div style="display: flex; margin-bottom: 10px">
+            <a href="{% url 'developer-index' %}" style="margin-right: 15px" class="btn btn-success">Портал разработчика</a>
+            {% if user == guild.creator %}<a href="{% url 'guild-delete' guild.id %}" style="margin-right: 15px" class="btn btn-danger">Удалить сервер</a>{% endif %}
+        </div>
     </div>
 {% endblock %}

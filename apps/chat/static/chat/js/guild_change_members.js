@@ -6,7 +6,7 @@ guildSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
     console.log(data);
 
-    if (data.action === 'kicked' || data.action === 'banned') {
+    if (data.action === 'left') {
         document.getElementById(`id_${data.member.id}`).remove();
     } else if (data.action === 'joined') {
         const list = document.querySelector(`#members-list`);

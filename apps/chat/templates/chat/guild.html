@@ -7,6 +7,7 @@
 
 {% block extra-header %}
     {% if member.is_admin %}<a class="header__controls__link" href="{% url 'guild-change-main' guild.id %}">Настройки сервера</a>{% endif %}
+    {% if guild.creator != user %}<a class="header__controls__link" href="{% url 'guild-leave' guild.id %}">Покинуть сервер</a>{% endif %}
 {% endblock %}
 
 

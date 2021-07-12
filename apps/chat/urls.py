@@ -9,6 +9,8 @@ urlpatterns = [
 
     path('guild/join/', login_required(GuildJoinView.as_view()), name='guild-join'),
     path('guild/<int:guild>/', login_required(GuildView.as_view()), name='guild-chat'),
+    path('guild/<int:guild>/leave/', login_required(GuildLeaveView.as_view()), name='guild-leave'),
+    path('guild/<int:guild>/delete/', login_required(GuildDeleteView.as_view()), name='guild-delete'),
 
     path('guild/<int:guild>/change/main/', login_required(GuildChangeMainView.as_view()), name='guild-change-main'),
 

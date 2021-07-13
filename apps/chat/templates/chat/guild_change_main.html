@@ -44,7 +44,34 @@
 
         <div style="display: flex; margin-bottom: 10px">
             <a href="{% url 'developer-index' %}" style="margin-right: 15px" class="btn btn-success">Портал разработчика</a>
-            {% if user == guild.creator %}<a href="{% url 'guild-delete' guild.id %}" style="margin-right: 15px" class="btn btn-danger">Удалить сервер</a>{% endif %}
+            {% if user == guild.creator %}<button type="button" class="btn btn-danger" onclick="modalOpen()">Удалить сервер</button>{% endif %}
+        </div>
+
+        <!-- HTML-код модального окна -->
+        <div class="modal fade" id="deleteModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Удалить сервер</h5>
+                        <button type="button" class="btn-close" onclick="deleteModal.hide()"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% include 'forms/form_field_text.html' with label='Введите название сервера' value='' name='deleteConfirm' maxlength=30 width='100%' %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="deleteModal.hide()">Отменить</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteGuild()">Удалить сервер</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+    guildName = '{{ guild.name }}';
+    deleteUrl = '{% url 'guild-delete' guild.id %}';
+    </script>
+    <script src="{% static 'chat/js/guild_change_main.js' %}"></script>
 {% endblock %}

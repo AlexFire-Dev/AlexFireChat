@@ -133,6 +133,7 @@ class BotJoinView(RedirectView):
             {
                 'type': 'bot_joined',
                 'guild': guild.id,
+                'member': member.id,
                 'user': member.user.id,
             }
         )

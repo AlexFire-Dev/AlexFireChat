@@ -43,6 +43,7 @@ class BotConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'action': 'joined',
                 'guild_id': event['guild'],
+                'member_id': event['member']
             }))
 
     @database_sync_to_async

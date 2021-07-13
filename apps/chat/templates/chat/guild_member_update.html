@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+
+{% block extra-header %}
+    {% if member.is_admin %}<a class="header__controls__link" href="{% url 'guild-change-members' guild.id %}">Настройки сервера</a>{% endif %}
+{% endblock %}
+
+
+{% block main %}
+    <div class="container">
+        <h2 style="margin-bottom: 10px; margin-top: 20px">Изменение пользователя {% if member.user.get_full_name %}{{ member.user.get_full_name }}{% else %}{{ member.user.username }}{% endif %}</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="card" style="margin-top: 10px; margin-bottom: 5px">
+                <div class="card-header">
+                    {% if member.user.get_full_name %}{{ member.user.get_full_name }}{% else %}{{ member.user.username }}{% endif %}
+                </div>
+                <div class="card-body" style="height: 70px">
+                    <div style="display: flex; justify-content: space-between; align-items: center; height: 38px">
+                        <div>
+                            {% if user == guild.creator and not member.user.bot %}
+                                {% include 'forms/form_field_check.html' with value=form.admin.value label='Администратор' name=form.admin.name %}
+                            {% else %}
+                                {% include 'forms/form_field_check.html' with disabled=True value=member.is_admin label='Администратор' name='admin_check' %}
+                            {% endif %}
+                            {% include 'forms/form_field_check.html' with disabled=True value=member.user.bot label='Бот' name='bot_check' %}
+                        </div>
+                        <div style="display: flex">
+                            {% if user == guild.creator and not member.user.bot %}<button class="btn btn-success" type="submit" style="margin-right: 10px">Сохранить</button>{% endif %}
+                            <a href="{% url 'guild-member-kick' guild.id member.id %}" style="margin-right: 10px" class="btn btn-warning">Выгнать</a>
+                            <a href="{% url 'guild-member-ban' guild.id member.id %}" class="btn btn-danger">Забанить</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

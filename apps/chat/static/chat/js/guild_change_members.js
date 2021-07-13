@@ -21,10 +21,7 @@ guildSocket.onmessage = function (e) {
         }
 
         let change_success =
-            `<div style="display: flex">` +
-            `<a href="/guild/${ guildId }/change/members/${data.member.id}/kick/" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>` +
-            `<a href="/guild/${ guildId }/change/members/${data.member.id}/ban/" class="btn btn-danger">Забанить</a>` +
-            `</div>`;
+            `<a href="/guild/${ guildId }/change/members/${data.member.id}/update/" class="btn btn-success">Редактировать</a>`;
         let change = ``;
         if (!data.member.admin) {
             change = change_success;
@@ -36,24 +33,24 @@ guildSocket.onmessage = function (e) {
 
         list.innerHTML +=
             `<div id="id_${data.member.id}" class="card" style="margin-top: 10px; margin-bottom: 5px">` +
-            `<div class="card-header">` +
-            `${data.member.username}` +
-            `</div>` +
-            `<div class="card-body" style="height: 70px">` +
-            `<div style="display: flex; justify-content: space-between; align-items: center; height: 38px">` +
-            `<div>` +
-            `<div class="form-check">` +
-            `<label class="form-check-label" for="id_admin_check">Администратор</label>` +
-            `<input type="checkbox" ${admin_check} name="admin_check" class="form-check-input" id="id_admin_check" disabled>` +
-            `</div>` +
-            `<div class="form-check">` +
-            `<label class="form-check-label" for="id_bot_check">Бот</label>` +
-            `<input type="checkbox" ${bot_check} name="bot_check" class="form-check-input" id="id_bot_check" disabled>` +
-            `</div>` +
-            `</div>` +
-            `${change}` +
-            `</div>` +
-            `</div>` +
+                `<div class="card-header">` +
+                    `${data.member.username}` +
+                `</div>` +
+                `<div class="card-body" style="height: 70px">` +
+                    `<div style="display: flex; justify-content: space-between; align-items: center; height: 38px">` +
+                        `<div>` +
+                            `<div class="form-check">` +
+                                `<label class="form-check-label" for="id_admin_check">Администратор</label>` +
+                                `<input type="checkbox" ${admin_check} name="admin_check" class="form-check-input" id="id_admin_check" disabled>` +
+                            `</div>` +
+                            `<div class="form-check">` +
+                                `<label class="form-check-label" for="id_bot_check">Бот</label>` +
+                                `<input type="checkbox" ${bot_check} name="bot_check" class="form-check-input" id="id_bot_check" disabled>` +
+                            `</div>` +
+                        `</div>` +
+                        `${change}` +
+                    `</div>` +
+                `</div>` +
             `</div>`;
     }
 };

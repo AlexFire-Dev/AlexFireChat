@@ -9,15 +9,9 @@
                 {% include 'forms/form_field_check.html' with disabled=True value=member.user.bot label='Бот' name='bot_check' %}
             </div>
             {% if not member.is_admin %}
-                <div style="display: flex">
-                    <a href="{% url 'guild-member-kick' guild.id member.id %}" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>
-                    <a href="{% url 'guild-member-ban' guild.id member.id %}" class="btn btn-danger">Забанить</a>
-                </div>
+                <a href="{% url 'guild-member-update' guild.id member.id %}" class="btn btn-success">Редактировать</a>
             {% elif user == guild.creator and member.user != user %}
-                <div style="display: flex">
-                    <a href="{% url 'guild-member-kick' guild.id member.id %}" style="margin-right: 15px" class="btn btn-warning">Выгнать</a>
-                    <a href="{% url 'guild-member-ban' guild.id member.id %}" class="btn btn-danger">Забанить</a>
-                </div>
+                <a href="{% url 'guild-member-update' guild.id member.id %}" class="btn btn-success">Редактировать</a>
             {% endif %}
         </div>
     </div>

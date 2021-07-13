@@ -154,6 +154,38 @@ class GuildDeleteView(RedirectView):
         return super(GuildDeleteView, self).get(self, request, *args, **kwargs)
 
 
+class GuildMemberUpdate(UpdateView):
+    form_class = UpdateMemberForm
+    template_name = 'chat/guild_member_update.html'
+
+    def get_success_url(self):
+        return reverse('guild-change-members', args=[self.kwargs.get('guild')])
+
+    def dispatch(self, request, *args, **kwargs):
+        guild = get_object_or_404(Guild, id=self.kwargs.get('guild'))
+        me = get_object_or_404(Member, guild=guild, user=self.request.user, active=True, banned=False)
+        if me.user == guild.creator:
+            return super(GuildMemberUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect(reverse('guild-chat', args=[self.kwargs.get('guild')]))
+
+    def get_object(self, queryset=None):
+        guild = get_object_or_404(Guild, id=self.kwargs.get('guild'))
+        member = get_object_or_404(Member, guild=guild, id=self.kwargs.get('member'), active=True, banned=False)
+        return member
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        guild = get_object_or_404(Guild, id=self.kwargs.get('guild'))
+        member = self.get_object()
+
+        context.update({
+            'guild': guild,
+            'member': member,
+        })
+        return context
+
+
 class GuildMemberKick(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse('guild-change-members', args=[self.kwargs.get('guild')])

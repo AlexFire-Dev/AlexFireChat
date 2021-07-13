@@ -15,6 +15,7 @@ urlpatterns = [
     path('guild/<int:guild>/change/main/', login_required(GuildChangeMainView.as_view()), name='guild-change-main'),
 
     path('guild/<int:guild>/change/members/', login_required(GuildChangeMembersView.as_view()), name='guild-change-members'),
+    path('guild/<int:guild>/change/members/<int:member>/update/', login_required(GuildMemberUpdate.as_view()), name='guild-member-update'),
     path('guild/<int:guild>/change/members/<int:member>/kick/', login_required(GuildMemberKick.as_view()), name='guild-member-kick'),
     path('guild/<int:guild>/change/members/<int:member>/ban/', login_required(GuildMemberBan.as_view()), name='guild-member-ban'),
 

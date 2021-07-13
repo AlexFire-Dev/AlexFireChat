@@ -117,3 +117,8 @@ body {
   flex-grow: 1;
   overflow-y: auto;
 }
+
+.workplace {
+    margin-top: 20px;
+    margin-bottom: 5px;
+}

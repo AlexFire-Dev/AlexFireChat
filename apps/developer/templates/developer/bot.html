@@ -16,12 +16,8 @@
 {% block main %}
     <div class="container workplace">
         <h2 style="margin-bottom: 20px">Бот {{ bot.account.username }}</h2>
-        <form method="get" class="join" action="{% url 'bot-join' bot.id %}">
-            <h3 class="join__text">Присоединится к серверу</h3>
-            {% include 'forms/form_field_text.html' with placeholder='Код приглашения' name='join-input' maxlength=15 width='200px' %}
-            <button class="btn btn-primary" type="submit">Вступить</button>
-        </form>
-        <div class="card">
+        <a class="join__link" href="{% url 'bot-join' bot.id %}">Присоединиться к серверу</a>
+        <div class="card" style="margin-top: 20px">
             <h5 class="card-header">{{ bot.account.username }}</h5>
             <div class="card-body">
                 <h5 class="card-title">Token:</h5>

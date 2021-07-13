@@ -70,7 +70,10 @@ class GuildJoinView(RedirectView):
         return reverse('index')
 
     def get(self, request, *args, **kwargs):
-        link = get_object_or_404(InviteLink, key=self.request.GET.get('join-input'))
+        try:
+            link = InviteLink.objects.get(key=self.request.GET.get('join-input'))
+        except:
+            return HttpResponseRedirect(reverse('index'))
         guild = link.guild
         Member.objects.get_or_create(user=self.request.user, guild=guild)
         member = Member.objects.get(user=self.request.user, guild=guild)

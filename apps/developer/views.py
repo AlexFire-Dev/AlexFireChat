@@ -93,18 +93,34 @@ class BotUpdateView(UpdateView):
         return context
 
 
-class BotJoinView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('developer-index')
+class BotJoinView(TemplateView):
+    template_name = 'developer/bot-join.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        bot = get_object_or_404(Bot, id=self.kwargs.get('bot'))
+        admins = Member.objects.filter(user=self.request.user, active=True, banned=False, admin=True)
+
+        context.update({
+            'bot': bot,
+            'membership': admins,
+        })
+        return context
 
     def get(self, request, *args, **kwargs):
-        link = get_object_or_404(InviteLink, key=self.request.GET.get('join-input'))
-        guild = link.guild
+        guild_id = int(self.request.GET.get('guild-select', 0))
+        if guild_id == 0:
+            return super(BotJoinView, self).get(self, request, *args, **kwargs)
+
+        guild = get_object_or_404(Guild, id=guild_id)
         bot = get_object_or_404(Bot, id=self.kwargs.get('bot'))
         Member.objects.get_or_create(user=bot.account, guild=guild)
         member = Member.objects.get(user=bot.account, guild=guild)
-        if guild.creator != self.request.user or member.banned:
+        if member.banned:
             return HttpResponseRedirect(reverse('developer-index'))
+        if member.active and member.admin:
+            return super(BotJoinView, self).get(self, request, *args, **kwargs)
         member.active = True
         member.admin = True
         member.save()

@@ -66,9 +66,14 @@ guildSocket.onmessage = function (e) {
             href = `<button class="deleteButton" onclick="deleteMessage(${data.message.id})" type="button" href="#"><img src="${delete_url}" alt="delete" width="21px" height="21px"></button>`;
         }
 
+        let flex_direction = 'row'
+        if (data.author.id === member_id) {
+            flex_direction = 'row-reverse';
+        }
+
         feed.innerHTML +=
             `<div id="id_${data.message.id}" class="card text-center" style="margin-top: 15px">` +
-            `<header class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center">` +
+            `<header class="card-header" style="display: flex; flex-direction: ${flex_direction}; flex-grow: 1; justify-content: space-between; align-items: center">` +
             `<span style="font-weight: bold">${data.author.nickname}</span>` +
             `${href}` +
             `</header>` +
@@ -112,9 +117,14 @@ guildSocket.onmessage = function (e) {
                 href = `<button class="deleteButton" onclick="deleteMessage(${event.message.id})" type="button" href="#"><img src="${delete_url}" alt="delete" width="21px" height="21px"></button>`;
             }
 
+            let flex_direction = 'row'
+            if (event.author.id === member_id) {
+                flex_direction = 'row-reverse';
+            }
+
             html +=
                 `<div id="id_${event.message.id}" class="card text-center" style="margin-top: 15px">` +
-                `<header class="card-header" style="display: flex; flex-grow: 1; justify-content: space-between; align-items: center">` +
+                `<header class="card-header" style="display: flex; flex-direction: ${flex_direction}; flex-grow: 1; justify-content: space-between; align-items: center">` +
                 `<span style="font-weight: bold">${event.author.nickname}</span>` +
                 `${href}` +
                 `</header>` +

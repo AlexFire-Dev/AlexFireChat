@@ -19,7 +19,34 @@
         <form method="post">
             {% csrf_token %}
             {% include 'forms/form_field_text.html' with label='Название' value=form.username.value name=form.username.name help_text=form.username.help_text errors=form.username.errors width='300px' %}
-            <button class="btn btn-primary" type="submit" style="margin-top: 30px">Сохранить</button>
+            <div style="margin-top: 30px; display: flex">
+                <button class="btn btn-primary" type="submit" style="margin-right: 10px">Сохранить</button>
+                <button type="button" class="btn btn-danger" onclick="deleteModal.show()">Удалить</button>
+            </div>
         </form>
+
+        <!-- HTML-код модального окна -->
+        <div class="modal fade" id="deleteModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Удалить бота</h5>
+                        <button type="button" class="btn-close" onclick="deleteModal.hide()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Вы уверены? Это действие нельзя отменить!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="deleteModal.hide()">Отменить</button>
+                        <a href="{% url 'bot-delete' bot.id %}" class="btn btn-danger">Удалить бота</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'developer/js/bot-change.js' %}"></script>
 {% endblock %}

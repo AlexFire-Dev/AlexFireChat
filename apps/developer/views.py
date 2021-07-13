@@ -139,3 +139,15 @@ class BotJoinView(RedirectView):
         )
 
         return super(BotJoinView, self).get(self, request, *args, **kwargs)
+
+
+class BotDeleteView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('developer-index')
+
+    def get(self, request, *args, **kwargs):
+        bot = get_object_or_404(Bot, id=self.kwargs.get('bot'), master=self.request.user)
+        bot.account.delete()
+        bot.delete()
+
+        return super(BotDeleteView, self).get(self, request, *args, **kwargs)

@@ -25,12 +25,18 @@
             <h5 class="card-header">{{ bot.account.username }}</h5>
             <div class="card-body">
                 <h5 class="card-title">Token:</h5>
-                <p class="card-text">{{ bot.account.GetBotToken.key }}</p>
+                <p id="bot_token" class="card-text">{{ bot.account.GetBotToken.key }}</p>
                 <div style="display: flex">
                     <a href="{% url 'bot-regenerate' bot.id %}" class="btn btn-success">Сгенерировать новый</a>
+                    <button type="button" class="btn btn-warning" onclick="copy('#bot_token')" style="margin-left: 15px">Скопировать токен</button>
                     <a href="{% url 'bot-edit' bot.id %}" style="margin-left: 15px" class="btn btn-primary">Редактировать</a>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'developer/js/bot.js' %}"></script>
 {% endblock %}

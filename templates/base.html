@@ -55,6 +55,7 @@
 
         <script>
         const websocket_protocol = '{% if debug %}ws{% else %}wss{% endif %}';
+        const http_protocol = '{% if debug %}http{% else %}https{% endif %}';
         </script>
         {% block script %}{% endblock %}
     </body>

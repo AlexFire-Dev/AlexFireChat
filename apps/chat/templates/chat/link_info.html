@@ -5,7 +5,8 @@
         <div style="display: flex; justify-content: space-between">
             <span>{{ link.key }}</span>
             <div>
-                <a class="key_link" href="{% url 'guild-join' %}?join-input={{ link.key }}">Ссылка</a>
+                <div style="display: none;" id="link_{{ link.id }}">{{ request.META.HTTP_HOST }}{% url 'guild-join' %}?join-input={{ link.key }}</div>
+                <button class="key_link" onclick="copy('#link_{{ link.id }}')">Скопировать ссылку</button>
                 <a href="{% url 'delete-invite-link' guild.id link.id %}"><img src="{% static 'images/delete.svg' %}" alt="delete" height="21px" width="21px"></a>
             </div>
         </div>

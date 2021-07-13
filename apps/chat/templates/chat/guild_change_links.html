@@ -35,3 +35,7 @@
         <a href="{% url 'generate-invite-link' guild.id %}" class="btn btn-success" style="margin-top: 10px; margin-bottom: 5px">Сгенерировать новый код</a>
     </div>
 {% endblock %}
+
+{% block script %}
+    <script src="{% static 'chat/js/guild_change_links.js' %}"></script>
+{% endblock %}

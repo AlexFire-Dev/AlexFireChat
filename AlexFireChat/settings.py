@@ -204,11 +204,12 @@ if DEBUG:
         }
     }
 else:
+    REDIS_HOST = 'redis://:' + os.getenv('REDIS_PASSWORD') + '@' + os.getenv('REDIS_HOST') + ':' + os.getenv('REDIS_PORT') + '/0'
     CHANNEL_LAYERS = {
         'default': {
             'BACKEND': 'channels_redis.core.RedisChannelLayer',
             'CONFIG': {
-                'hosts': [(os.getenv('REDIS_HOST'), int(os.getenv('REDIS_PORT', '6379')))]
+                'hosts': [REDIS_HOST]
             },
         },
     }

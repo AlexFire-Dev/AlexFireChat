@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   redis:
-    image: redis:6.2.4-alpine
+    image: redis:6.2.4
     ports:
       - 6379:6379
     restart: unless-stopped
@@ -17,6 +17,8 @@ services:
       - 5432:5432
     env_file:
       - deploy/conf.env
+    networks:
+      - backend
     restart: unless-stopped
 
   web:
@@ -31,6 +33,8 @@ services:
       - deploy/conf.env
     ports:
       - 8000:8000
+    networks:
+      - backend
     restart: unless-stopped
 
   certbot:
@@ -57,7 +61,12 @@ services:
     ports:
       - 80:80
       - 443:443
+    networks:
+      - backend
     restart: unless-stopped
 
 volumes:
   pgdata:
+
+networks:
+  backend:

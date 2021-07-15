@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   redis:
-    image: redis:6.2.4
+    image: redis:3.2.0
+    volumes:
+      - rddata:/data/
     ports:
       - 6379:6379
     networks:
@@ -69,6 +71,7 @@ services:
 
 volumes:
   pgdata:
+  rddata:
 
 networks:
   backend:

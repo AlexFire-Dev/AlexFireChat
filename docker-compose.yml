@@ -3,8 +3,6 @@ version: '3.8'
 services:
   db:
     image: postgres:13.3
-    depends_on:
-      - redis
     volumes:
       - pgdata:/var/lib/postgresql/data/
     ports:
@@ -19,7 +17,6 @@ services:
     build: .
     depends_on:
       - db
-      - redis
     volumes:
       - ./static/:/app/static/
       - ./media/:/app/media/
@@ -43,7 +40,6 @@ services:
     image: nginx:alpine
     depends_on:
       - db
-      - redis
       - web
       - certbot
     volumes:

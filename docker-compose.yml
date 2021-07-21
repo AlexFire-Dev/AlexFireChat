@@ -4,8 +4,6 @@ services:
   db:
   web:
     build: .
-    depends_on:
-      - db
     volumes:
       - ./static/:/app/static/
       - ./media/:/app/media/
@@ -13,8 +11,6 @@ services:
       - deploy/conf.env
     ports:
       - 8000:8000
-    networks:
-      - backend
     restart: unless-stopped
 
   certbot:
@@ -28,7 +24,6 @@ services:
   nginx:
     image: nginx:alpine
     depends_on:
-      - db
       - web
       - certbot
     volumes:
@@ -40,12 +35,4 @@ services:
     ports:
       - 80:80
       - 443:443
-    networks:
-      - backend
     restart: unless-stopped
-
-volumes:
-  pgdata:
-
-networks:
-  backend:

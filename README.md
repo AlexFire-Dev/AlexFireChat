@@ -12,10 +12,6 @@ Status of Last Deployment:<br>
 ~~~~
 PYTHONBUFFEERED=1
 
-POSTGRES_USER={{ Имя пользователя postgres }}
-POSTGRES_DB={{ БД postgres }}
-POSTGRES_PASSWORD={{ Пароль БД postgres }}
-
 REDIS_HOST=redis
 REDIS_PORT=6379
 

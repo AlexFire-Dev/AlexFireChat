@@ -2,17 +2,6 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:13.3
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
-    ports:
-      - 5432:5432
-    env_file:
-      - deploy/conf.env
-    networks:
-      - backend
-    restart: unless-stopped
-
   web:
     build: .
     depends_on:

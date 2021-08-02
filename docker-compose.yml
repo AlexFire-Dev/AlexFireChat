@@ -10,4 +10,10 @@ services:
       - deploy/conf.env
     ports:
       - 8000:8000
+    networks:
+      - defaulf
     restart: unless-stopped
+
+networks:
+  defaulf:
+    driver: bridge

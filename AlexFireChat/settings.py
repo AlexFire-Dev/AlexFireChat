@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'apps.api',
     'apps.user',
     'apps.chat',
+    'apps.billing',
     'apps.developer',
 ]
 

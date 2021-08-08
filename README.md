@@ -12,8 +12,7 @@ Status of Last Deployment:<br>
 ~~~~
 PYTHONBUFFEERED=1
 
-REDIS_HOST=redis
-REDIS_PORT=6379
+OPLATA_KEY={{ Код сервиса оплаты }}
 
 SECRET_KEY={{ Секретный ключ django  }}
 DB_USER={{ Имя пользователя postgres }}

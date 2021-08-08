@@ -38,7 +38,7 @@ class SuccessBillView(View):
 
 class BillView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        return f'{self.url}?successUrl=alexfire.shvarev.com'
+        return f'{self.url}&successUrl=alexfire.shvarev.com'
 
     def get(self, request, *args, **kwargs):
         try:

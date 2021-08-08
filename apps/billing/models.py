@@ -13,9 +13,10 @@ class Bill(models.Model):
 
     def get_url(self):
         try:
+            url = "https://oplata.alexfire.shvarev.com/create/"
+
             headers = {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
             }
 
             request_data = {
@@ -24,8 +25,7 @@ class Bill(models.Model):
                 'site': 'https://alexfire.shvarev.com/billing/succcess/'
             }
 
-            request_data = json.dumps(request_data)
-            response = requests.post('https://oplata.alexfire.shvarev.com/create/', headers=headers, data=request_data)
+            response = requests.request('POST', url, data=json.dumps(request_data), headers=headers)
             data = response.json()
             self.status = 'WAITING'
             self.bill_id = data['id']

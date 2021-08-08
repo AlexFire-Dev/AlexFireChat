@@ -24,7 +24,7 @@ class BillView(RedirectView):
 
     def get(self, request, *args, **kwargs):
         try:
-            amount = float(request.GET.get('amount', '1.00'))
+            amount = float(request.GET.get('amount', 1.00))
             comment = request.GET.get('comment', '')
             bill = Bill.objects.create(amount=amount, comment=comment)
             self.url = bill.get_url()

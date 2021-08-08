@@ -5,5 +5,6 @@ from .views import *
 
 
 urlpatterns = [
-    path('success/', login_required(), name='developer-index'),
+    path('new/', BillView.as_view(), name='bill-new'),
+    path('success/', SuccessBillView.as_view(), name='bill-success'),
 ]
